@@ -1,0 +1,658 @@
+{
+  "schemaVersion": 1,
+  "id": "6461b17c5bab8075",
+  "kind": "observed",
+  "source": "web-trace",
+  "input": {
+    "url": "https://expired.badssl.com",
+    "followRedirects": true
+  },
+  "vantage": {
+    "description": "This machine (packet CLI)",
+    "isUserMachine": true,
+    "runtime": "packet 0.1.0 on macos-aarch64"
+  },
+  "startedAtUnixMs": 1790930664468.3171,
+  "entities": [
+    {
+      "id": "app",
+      "role": "client-app",
+      "label": "Packet engine",
+      "addresses": [],
+      "evidence": "observed"
+    },
+    {
+      "id": "os-resolver",
+      "role": "os-resolver",
+      "label": "Operating system resolver",
+      "addresses": [],
+      "evidence": "observed"
+    },
+    {
+      "id": "server:104.154.89.105",
+      "role": "server",
+      "label": "expired.badssl.com",
+      "addresses": [
+        {
+          "value": "104.154.89.105",
+          "evidence": "observed",
+          "source": "address passed to connect(2)"
+        }
+      ],
+      "evidence": "observed"
+    },
+    {
+      "id": "dns:172.20.10.1",
+      "role": "dns-server",
+      "label": "DNS resolver 172.20.10.1",
+      "addresses": [
+        {
+          "value": "172.20.10.1",
+          "evidence": "observed",
+          "source": "address we sent queries to"
+        }
+      ],
+      "evidence": "observed"
+    }
+  ],
+  "hops": [
+    {
+      "index": 0,
+      "url": "https://expired.badssl.com/",
+      "connectionId": "c1"
+    }
+  ],
+  "events": [
+    {
+      "id": "e1",
+      "hopIndex": 0,
+      "evidence": "observed",
+      "time": {
+        "start": 0.319334
+      },
+      "status": "ok",
+      "kind": "url.parse",
+      "data": {
+        "input": {
+          "value": "https://expired.badssl.com",
+          "evidence": "observed",
+          "source": "user input"
+        },
+        "scheme": {
+          "value": "https",
+          "evidence": "derived",
+          "source": "WHATWG URL parsing (url crate)"
+        },
+        "host": {
+          "value": "expired.badssl.com",
+          "evidence": "derived",
+          "source": "WHATWG URL parsing (url crate)"
+        },
+        "hostKind": {
+          "value": "domain",
+          "evidence": "derived",
+          "source": "WHATWG URL parsing (url crate)"
+        },
+        "port": {
+          "value": 443,
+          "evidence": "derived",
+          "source": "derive: default port for https"
+        },
+        "path": {
+          "value": "/",
+          "evidence": "derived",
+          "source": "WHATWG URL parsing (url crate)",
+          "note": "Path and query only. A #fragment is never sent to the server; it stays in the client."
+        }
+      }
+    },
+    {
+      "id": "e2",
+      "hopIndex": 0,
+      "protocol": "dns",
+      "evidence": "observed",
+      "time": {
+        "start": 1.2462090000000001,
+        "end": 218.448084
+      },
+      "from": "app",
+      "to": "os-resolver",
+      "status": "ok",
+      "explainKey": "dns.os-resolver",
+      "kind": "dns.lookup",
+      "data": {
+        "hostname": {
+          "value": "expired.badssl.com",
+          "evidence": "observed",
+          "source": "argument to getaddrinfo(3)"
+        },
+        "addresses": {
+          "value": [
+            "104.154.89.105"
+          ],
+          "evidence": "observed",
+          "source": "getaddrinfo(3) result, in returned order",
+          "note": "The OS may have answered from its cache, so this duration can be near zero."
+        }
+      }
+    },
+    {
+      "id": "e3",
+      "hopIndex": 0,
+      "evidence": "observed",
+      "time": {
+        "start": 218.581084
+      },
+      "status": "ok",
+      "explainKey": "guard.ssrf",
+      "kind": "guard.check",
+      "data": {
+        "policy": {
+          "value": "public-only",
+          "evidence": "observed",
+          "source": "engine configuration"
+        },
+        "verdicts": {
+          "value": [
+            {
+              "address": "104.154.89.105",
+              "allowed": true
+            }
+          ],
+          "evidence": "derived",
+          "source": "derive: address ranges from IANA special-purpose registries"
+        }
+      }
+    },
+    {
+      "id": "e4",
+      "hopIndex": 0,
+      "connectionId": "c1",
+      "protocol": "tcp",
+      "evidence": "observed",
+      "time": {
+        "start": 218.761209,
+        "end": 493.767084
+      },
+      "from": "app",
+      "to": "server:104.154.89.105",
+      "status": "ok",
+      "explainKey": "tcp.handshake",
+      "kind": "tcp.connect",
+      "data": {
+        "remote": {
+          "value": {
+            "address": "104.154.89.105",
+            "port": 443
+          },
+          "evidence": "observed",
+          "source": "address passed to connect(2)"
+        },
+        "addressChoice": {
+          "value": "first of 1 allowed address(es) getaddrinfo returned",
+          "evidence": "derived",
+          "source": "engine address selection"
+        },
+        "local": {
+          "value": {
+            "address": "172.20.10.3",
+            "port": 57916
+          },
+          "evidence": "observed",
+          "source": "getsockname(2)",
+          "note": "Before NAT. The server sees your public address."
+        },
+        "rttEstimateMs": {
+          "value": 275.005875,
+          "evidence": "derived",
+          "source": "derive: connect() duration ≈ 1 RTT (SYN out → SYN-ACK back) + local scheduling"
+        },
+        "nodelay": {
+          "value": true,
+          "evidence": "observed",
+          "source": "setsockopt(TCP_NODELAY), read back with getsockopt"
+        },
+        "kernel": {
+          "value": {
+            "state": "ESTABLISHED",
+            "srttMs": 274,
+            "rttvarMs": 137,
+            "rttLatestMs": 274,
+            "rtoMs": 0,
+            "mss": 1388,
+            "cwndBytes": 13880,
+            "ssthreshBytes": 1073725440,
+            "sendWindowBytes": 64768,
+            "recvWindowBytes": 131904,
+            "sendWindowScale": 7,
+            "recvWindowScale": 6,
+            "options": {
+              "timestamps": true,
+              "sack": true,
+              "windowScaling": true,
+              "ecn": true
+            },
+            "packetsSent": 0,
+            "packetsReceived": 0,
+            "bytesSent": 0,
+            "bytesReceived": 0,
+            "retransmittedPackets": 0,
+            "retransmittedBytes": 0,
+            "outOfOrderBytes": 0
+          },
+          "evidence": "observed",
+          "source": "getsockopt(IPPROTO_TCP, TCP_CONNECTION_INFO)",
+          "note": "Right after the handshake. The RTT here is from one sample: the SYN → SYN-ACK."
+        }
+      }
+    },
+    {
+      "id": "e5",
+      "hopIndex": 0,
+      "connectionId": "c1",
+      "protocol": "tls",
+      "evidence": "observed",
+      "time": {
+        "start": 498.01866700000005,
+        "end": 1025.171625
+      },
+      "from": "app",
+      "to": "server:104.154.89.105",
+      "status": "error",
+      "error": {
+        "value": {
+          "code": "CERT_EXPIRED",
+          "message": "invalid peer certificate: certificate expired: verification time 1790930665 (UNIX), but certificate is not valid after 1428883199 (362047466 seconds ago)"
+        },
+        "evidence": "observed",
+        "source": "WebPKI verification (rustls-webpki)"
+      },
+      "explainKey": "tls.handshake",
+      "kind": "tls.handshake",
+      "data": {
+        "sni": {
+          "value": "expired.badssl.com",
+          "evidence": "observed",
+          "source": "ClientHello server_name extension we sent"
+        },
+        "alpnOffered": {
+          "value": [
+            "http/1.1"
+          ],
+          "evidence": "observed",
+          "source": "ClientHello ALPN extension we sent"
+        },
+        "trustStore": {
+          "value": "Mozilla root program (webpki-roots), not the macOS Keychain",
+          "evidence": "observed",
+          "source": "engine configuration",
+          "note": "A certificate trusted only through your Keychain (e.g. a corporate proxy CA) fails here but works in Safari."
+        },
+        "records": {
+          "value": [
+            {
+              "atMs": 498.1125,
+              "direction": "sent",
+              "contentType": "handshake",
+              "recordVersion": "0x0301 (TLS 1.0)",
+              "length": 255,
+              "messages": [
+                "ClientHello"
+              ],
+              "encrypted": false
+            },
+            {
+              "atMs": 1024.159375,
+              "direction": "received",
+              "contentType": "handshake",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 80,
+              "messages": [
+                "ServerHello"
+              ],
+              "encrypted": false
+            },
+            {
+              "atMs": 1024.159375,
+              "direction": "received",
+              "contentType": "handshake",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 4323,
+              "messages": [
+                "Certificate"
+              ],
+              "encrypted": false
+            },
+            {
+              "atMs": 1024.159375,
+              "direction": "received",
+              "contentType": "handshake",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 333,
+              "messages": [
+                "ServerKeyExchange"
+              ],
+              "encrypted": false
+            },
+            {
+              "atMs": 1024.159375,
+              "direction": "received",
+              "contentType": "handshake",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 4,
+              "messages": [
+                "ServerHelloDone"
+              ],
+              "encrypted": false
+            },
+            {
+              "atMs": 1025.07,
+              "direction": "sent",
+              "contentType": "alert",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 2,
+              "messages": [
+                "alert: certificate_expired"
+              ],
+              "encrypted": false
+            }
+          ],
+          "evidence": "observed",
+          "source": "5-byte TLS record headers on bytes we sent/received",
+          "note": "Message names are read only from unencrypted records. Encrypted contents are invisible here, as on the wire."
+        },
+        "roundTrips": {
+          "value": 1,
+          "evidence": "derived",
+          "source": "derive: flights we sent that the server answered (ChangeCipherSpec ignored)"
+        },
+        "chain": {
+          "value": [
+            {
+              "subject": "OU=Domain Control Validated, OU=PositiveSSL Wildcard, CN=*.badssl.com",
+              "issuer": "C=GB, ST=Greater Manchester, L=Salford, O=COMODO CA Limited, CN=COMODO RSA Domain Validation Secure Server CA",
+              "serial": "4a:e7:95:49:fa:9a:be:3f:10:0f:17:a4:78:e1:69:09",
+              "notBeforeUnix": 1428537600.0,
+              "notAfterUnix": 1428883199.0,
+              "san": [
+                "*.badssl.com",
+                "badssl.com"
+              ],
+              "publicKey": "RSA 2048 bits",
+              "signatureAlgorithm": "sha256WithRSAEncryption",
+              "isCa": false,
+              "sha256": "BA:10:5C:E0:2B:AC:76:88:8E:CE:E4:7C:D4:EB:79:41:65:3E:9A:C9:93:B6:1B:2E:B3:DC:C8:20:14:D2:1B:4F",
+              "derBytes": 1359
+            },
+            {
+              "subject": "C=GB, ST=Greater Manchester, L=Salford, O=COMODO CA Limited, CN=COMODO RSA Domain Validation Secure Server CA",
+              "issuer": "C=GB, ST=Greater Manchester, L=Salford, O=COMODO CA Limited, CN=COMODO RSA Certification Authority",
+              "serial": "2b:2e:6e:ea:d9:75:36:6c:14:8a:6e:db:a3:7c:8c:07",
+              "notBeforeUnix": 1392163200.0,
+              "notAfterUnix": 1865548799.0,
+              "san": [],
+              "publicKey": "RSA 2048 bits",
+              "signatureAlgorithm": "sha384WithRSAEncryption",
+              "isCa": true,
+              "sha256": "02:AB:57:E4:E6:7A:0C:B4:8D:D2:FF:34:83:0E:8A:C4:0F:44:76:FB:08:CA:6B:E3:F5:CD:84:6F:64:68:40:F0",
+              "derBytes": 1548
+            },
+            {
+              "subject": "C=GB, ST=Greater Manchester, L=Salford, O=COMODO CA Limited, CN=COMODO RSA Certification Authority",
+              "issuer": "C=SE, O=AddTrust AB, OU=AddTrust External TTP Network, CN=AddTrust External CA Root",
+              "serial": "27:66:ee:56:eb:49:f3:8e:ab:d7:70:a2:fc:84:de:22",
+              "notBeforeUnix": 959683718.0,
+              "notAfterUnix": 1590835718.0,
+              "san": [],
+              "publicKey": "RSA 4096 bits",
+              "signatureAlgorithm": "sha384WithRSAEncryption",
+              "isCa": true,
+              "sha256": "4F:32:D5:DC:00:F7:15:25:0A:BC:C4:86:51:1E:37:F5:01:A8:99:DE:B3:BF:7E:A8:AD:BB:D3:AE:F1:C4:12:DA",
+              "derBytes": 1400
+            }
+          ],
+          "evidence": "observed",
+          "source": "Certificate message, decrypted by our TLS client"
+        },
+        "verification": {
+          "value": "CERT_EXPIRED",
+          "evidence": "observed",
+          "source": "WebPKI verification (rustls-webpki)"
+        }
+      }
+    },
+    {
+      "id": "e6",
+      "hopIndex": 0,
+      "connectionId": "c1",
+      "protocol": "tcp",
+      "evidence": "observed",
+      "time": {
+        "start": 1027.561042,
+        "end": 1287.9262919999999
+      },
+      "from": "app",
+      "to": "server:104.154.89.105",
+      "status": "ok",
+      "explainKey": "tcp.close",
+      "kind": "tcp.close",
+      "data": {
+        "initiatedBy": {
+          "value": "client",
+          "evidence": "observed",
+          "source": "we called shutdown(2) first"
+        },
+        "peerClosed": {
+          "value": true,
+          "evidence": "observed",
+          "source": "read(2) returned 0 (end of stream)"
+        },
+        "kernel": {
+          "value": {
+            "state": "TIME_WAIT",
+            "srttMs": 299,
+            "rttvarMs": 134,
+            "rttLatestMs": 262,
+            "rtoMs": 0,
+            "mss": 1388,
+            "cwndBytes": 14148,
+            "ssthreshBytes": 1073725440,
+            "sendWindowBytes": 64768,
+            "recvWindowBytes": 131072,
+            "sendWindowScale": 7,
+            "recvWindowScale": 6,
+            "options": {
+              "timestamps": true,
+              "sack": true,
+              "windowScaling": true,
+              "ecn": true
+            },
+            "packetsSent": 2,
+            "packetsReceived": 2,
+            "bytesSent": 267,
+            "bytesReceived": 4760,
+            "retransmittedPackets": 0,
+            "retransmittedBytes": 0,
+            "outOfOrderBytes": 0
+          },
+          "evidence": "observed",
+          "source": "getsockopt(IPPROTO_TCP, TCP_CONNECTION_INFO)",
+          "note": "After both FINs. The side that closed first waits in TIME_WAIT."
+        }
+      }
+    },
+    {
+      "id": "e7",
+      "hopIndex": 0,
+      "protocol": "dns",
+      "evidence": "observed",
+      "time": {
+        "start": 1289.716292,
+        "end": 1307.675834
+      },
+      "from": "app",
+      "to": "dns:172.20.10.1",
+      "status": "ok",
+      "explainKey": "dns.query",
+      "kind": "dns.query",
+      "data": {
+        "recordType": {
+          "value": "A",
+          "evidence": "observed",
+          "source": "question section we sent"
+        },
+        "qname": {
+          "value": "expired.badssl.com.",
+          "evidence": "observed",
+          "source": "question section we sent"
+        },
+        "server": {
+          "value": {
+            "address": "172.20.10.1",
+            "port": 53
+          },
+          "evidence": "observed",
+          "source": "/etc/resolv.conf: first nameserver"
+        },
+        "local": {
+          "value": {
+            "address": "172.20.10.3",
+            "port": 54865
+          },
+          "evidence": "observed",
+          "source": "getsockname(2) on our UDP socket"
+        },
+        "messageId": {
+          "value": 33204,
+          "evidence": "observed",
+          "source": "header we sent"
+        },
+        "queryBytes": {
+          "value": 36,
+          "evidence": "observed",
+          "source": "UDP payload we sent",
+          "note": "DNS message only. UDP adds 8 header bytes, IP adds 20 (v4) or 40 (v6)."
+        },
+        "response": {
+          "bytes": {
+            "value": 52,
+            "evidence": "observed",
+            "source": "UDP payload received"
+          },
+          "rcode": {
+            "value": "NoError",
+            "evidence": "observed",
+            "source": "dns response header: RCODE"
+          },
+          "flags": {
+            "value": {
+              "authoritative": false,
+              "truncated": false,
+              "recursionDesired": true,
+              "recursionAvailable": true
+            },
+            "evidence": "observed",
+            "source": "dns response header: AA/TC/RD/RA bits"
+          },
+          "answers": {
+            "value": [
+              {
+                "name": "expired.badssl.com.",
+                "recordType": "A",
+                "ttl": 254,
+                "value": "104.154.89.105"
+              }
+            ],
+            "evidence": "observed",
+            "source": "dns response: answer section"
+          }
+        }
+      }
+    },
+    {
+      "id": "e8",
+      "hopIndex": 0,
+      "protocol": "dns",
+      "evidence": "observed",
+      "time": {
+        "start": 1290.708792,
+        "end": 1462.34375
+      },
+      "from": "app",
+      "to": "dns:172.20.10.1",
+      "status": "ok",
+      "explainKey": "dns.query",
+      "kind": "dns.query",
+      "data": {
+        "recordType": {
+          "value": "AAAA",
+          "evidence": "observed",
+          "source": "question section we sent"
+        },
+        "qname": {
+          "value": "expired.badssl.com.",
+          "evidence": "observed",
+          "source": "question section we sent"
+        },
+        "server": {
+          "value": {
+            "address": "172.20.10.1",
+            "port": 53
+          },
+          "evidence": "observed",
+          "source": "/etc/resolv.conf: first nameserver"
+        },
+        "local": {
+          "value": {
+            "address": "172.20.10.3",
+            "port": 54239
+          },
+          "evidence": "observed",
+          "source": "getsockname(2) on our UDP socket"
+        },
+        "messageId": {
+          "value": 5531,
+          "evidence": "observed",
+          "source": "header we sent"
+        },
+        "queryBytes": {
+          "value": 36,
+          "evidence": "observed",
+          "source": "UDP payload we sent",
+          "note": "DNS message only. UDP adds 8 header bytes, IP adds 20 (v4) or 40 (v6)."
+        },
+        "response": {
+          "bytes": {
+            "value": 126,
+            "evidence": "observed",
+            "source": "UDP payload received"
+          },
+          "rcode": {
+            "value": "NoError",
+            "evidence": "observed",
+            "source": "dns response header: RCODE"
+          },
+          "flags": {
+            "value": {
+              "authoritative": false,
+              "truncated": false,
+              "recursionDesired": true,
+              "recursionAvailable": true
+            },
+            "evidence": "observed",
+            "source": "dns response header: AA/TC/RD/RA bits"
+          },
+          "answers": {
+            "value": [],
+            "evidence": "observed",
+            "source": "dns response: answer section"
+          }
+        }
+      }
+    }
+  ],
+  "outcome": {
+    "ok": false,
+    "summary": "TLS handshake failed: CERT_EXPIRED (invalid peer certificate: certificate expired: verification time 1790930665 (UNIX), but certificate is not valid after 1428883199 (362047466 seconds ago))"
+  }
+}

@@ -1,0 +1,1517 @@
+{
+  "schemaVersion": 1,
+  "id": "6c7f5c7bbf6d8bc1",
+  "kind": "observed",
+  "source": "web-trace",
+  "input": {
+    "url": "https://vercel.com",
+    "followRedirects": true
+  },
+  "vantage": {
+    "description": "This machine (packet CLI)",
+    "isUserMachine": true,
+    "runtime": "packet 0.1.0 on macos-aarch64"
+  },
+  "startedAtUnixMs": 1790937284341.835,
+  "entities": [
+    {
+      "id": "app",
+      "role": "client-app",
+      "label": "Packet engine",
+      "addresses": [],
+      "evidence": "observed"
+    },
+    {
+      "id": "os-resolver",
+      "role": "os-resolver",
+      "label": "Operating system resolver",
+      "addresses": [],
+      "evidence": "observed"
+    },
+    {
+      "id": "server:64.239.109.1",
+      "role": "server",
+      "label": "vercel.com",
+      "addresses": [
+        {
+          "value": "64.239.109.1",
+          "evidence": "observed",
+          "source": "address passed to connect(2)"
+        }
+      ],
+      "location": {
+        "value": {
+          "lat": 34.0119,
+          "lon": -117.86,
+          "place": "Walnut, US"
+        },
+        "evidence": "derived",
+        "source": "IP geolocation: DB-IP Lite city 2026-10 (CC BY 4.0)",
+        "note": "A database estimate for this address block, not a measurement. CDN and anycast addresses are often placed at the company's headquarters."
+      },
+      "evidence": "observed"
+    },
+    {
+      "id": "dns:192.168.1.1",
+      "role": "dns-server",
+      "label": "DNS resolver 192.168.1.1",
+      "addresses": [
+        {
+          "value": "192.168.1.1",
+          "evidence": "observed",
+          "source": "address we sent queries to"
+        }
+      ],
+      "evidence": "observed"
+    }
+  ],
+  "hops": [
+    {
+      "index": 0,
+      "url": "https://vercel.com/",
+      "connectionId": "c1",
+      "status": 200
+    }
+  ],
+  "events": [
+    {
+      "id": "e1",
+      "hopIndex": 0,
+      "evidence": "observed",
+      "time": {
+        "start": 0.03625
+      },
+      "status": "ok",
+      "kind": "url.parse",
+      "data": {
+        "input": {
+          "value": "https://vercel.com",
+          "evidence": "observed",
+          "source": "user input"
+        },
+        "scheme": {
+          "value": "https",
+          "evidence": "derived",
+          "source": "WHATWG URL parsing (url crate)"
+        },
+        "host": {
+          "value": "vercel.com",
+          "evidence": "derived",
+          "source": "WHATWG URL parsing (url crate)"
+        },
+        "hostKind": {
+          "value": "domain",
+          "evidence": "derived",
+          "source": "WHATWG URL parsing (url crate)"
+        },
+        "port": {
+          "value": 443,
+          "evidence": "derived",
+          "source": "derive: default port for https"
+        },
+        "path": {
+          "value": "/",
+          "evidence": "derived",
+          "source": "WHATWG URL parsing (url crate)",
+          "note": "Path and query only. A #fragment is never sent to the server; it stays in the client."
+        }
+      }
+    },
+    {
+      "id": "e2",
+      "hopIndex": 0,
+      "protocol": "dns",
+      "evidence": "observed",
+      "time": {
+        "start": 0.30425,
+        "end": 9.163584
+      },
+      "from": "app",
+      "to": "os-resolver",
+      "status": "ok",
+      "explainKey": "dns.os-resolver",
+      "kind": "dns.lookup",
+      "data": {
+        "hostname": {
+          "value": "vercel.com",
+          "evidence": "observed",
+          "source": "argument to getaddrinfo(3)"
+        },
+        "addresses": {
+          "value": [
+            "64.239.109.1",
+            "64.239.109.65"
+          ],
+          "evidence": "observed",
+          "source": "getaddrinfo(3) result, in returned order",
+          "note": "The OS may have answered from its cache, so this duration can be near zero."
+        }
+      }
+    },
+    {
+      "id": "e3",
+      "hopIndex": 0,
+      "evidence": "observed",
+      "time": {
+        "start": 9.209625
+      },
+      "status": "ok",
+      "explainKey": "guard.ssrf",
+      "kind": "guard.check",
+      "data": {
+        "policy": {
+          "value": "public-only",
+          "evidence": "observed",
+          "source": "engine configuration"
+        },
+        "verdicts": {
+          "value": [
+            {
+              "address": "64.239.109.1",
+              "allowed": true
+            },
+            {
+              "address": "64.239.109.65",
+              "allowed": true
+            }
+          ],
+          "evidence": "derived",
+          "source": "derive: address ranges from IANA special-purpose registries"
+        }
+      }
+    },
+    {
+      "id": "e4",
+      "hopIndex": 0,
+      "connectionId": "c1",
+      "protocol": "tcp",
+      "evidence": "observed",
+      "time": {
+        "start": 9.298041999999999,
+        "end": 38.957167
+      },
+      "from": "app",
+      "to": "server:64.239.109.1",
+      "status": "ok",
+      "explainKey": "tcp.handshake",
+      "kind": "tcp.connect",
+      "data": {
+        "remote": {
+          "value": {
+            "address": "64.239.109.1",
+            "port": 443
+          },
+          "evidence": "observed",
+          "source": "address passed to connect(2)"
+        },
+        "addressChoice": {
+          "value": "first of 2 allowed address(es) getaddrinfo returned",
+          "evidence": "derived",
+          "source": "engine address selection"
+        },
+        "local": {
+          "value": {
+            "address": "192.168.1.50",
+            "port": 59223
+          },
+          "evidence": "observed",
+          "source": "getsockname(2)",
+          "note": "Before NAT. The server sees your public address."
+        },
+        "rttEstimateMs": {
+          "value": 29.659125,
+          "evidence": "derived",
+          "source": "derive: connect() duration ≈ 1 RTT (SYN out → SYN-ACK back) + local scheduling"
+        },
+        "nodelay": {
+          "value": true,
+          "evidence": "observed",
+          "source": "setsockopt(TCP_NODELAY), read back with getsockopt"
+        },
+        "kernel": {
+          "value": {
+            "state": "ESTABLISHED",
+            "srttMs": 29,
+            "rttvarMs": 14,
+            "rttLatestMs": 29,
+            "rtoMs": 0,
+            "mss": 1448,
+            "cwndBytes": 14480,
+            "ssthreshBytes": 1073725440,
+            "sendWindowBytes": 65535,
+            "recvWindowBytes": 131776,
+            "sendWindowScale": 8,
+            "recvWindowScale": 6,
+            "options": {
+              "timestamps": true,
+              "sack": true,
+              "windowScaling": true,
+              "ecn": true
+            },
+            "packetsSent": 0,
+            "packetsReceived": 0,
+            "bytesSent": 0,
+            "bytesReceived": 0,
+            "retransmittedPackets": 0,
+            "retransmittedBytes": 0,
+            "outOfOrderBytes": 0
+          },
+          "evidence": "observed",
+          "source": "getsockopt(IPPROTO_TCP, TCP_CONNECTION_INFO)",
+          "note": "Right after the handshake. The RTT here is from one sample: the SYN → SYN-ACK."
+        }
+      }
+    },
+    {
+      "id": "e5",
+      "hopIndex": 0,
+      "connectionId": "c1",
+      "protocol": "tls",
+      "evidence": "observed",
+      "time": {
+        "start": 40.498209,
+        "end": 200.385792
+      },
+      "from": "app",
+      "to": "server:64.239.109.1",
+      "status": "ok",
+      "explainKey": "tls.handshake",
+      "kind": "tls.handshake",
+      "data": {
+        "sni": {
+          "value": "vercel.com",
+          "evidence": "observed",
+          "source": "ClientHello server_name extension we sent"
+        },
+        "alpnOffered": {
+          "value": [
+            "http/1.1"
+          ],
+          "evidence": "observed",
+          "source": "ClientHello ALPN extension we sent"
+        },
+        "trustStore": {
+          "value": "Mozilla root program (webpki-roots), not the macOS Keychain",
+          "evidence": "observed",
+          "source": "engine configuration",
+          "note": "A certificate trusted only through your Keychain (e.g. a corporate proxy CA) fails here but works in Safari."
+        },
+        "records": {
+          "value": [
+            {
+              "atMs": 40.536417,
+              "direction": "sent",
+              "contentType": "handshake",
+              "recordVersion": "0x0301 (TLS 1.0)",
+              "length": 247,
+              "messages": [
+                "ClientHello"
+              ],
+              "encrypted": false
+            },
+            {
+              "atMs": 193.613417,
+              "direction": "received",
+              "contentType": "handshake",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 122,
+              "messages": [
+                "ServerHello"
+              ],
+              "encrypted": false
+            },
+            {
+              "atMs": 193.613417,
+              "direction": "received",
+              "contentType": "change_cipher_spec",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 1,
+              "messages": [],
+              "encrypted": false
+            },
+            {
+              "atMs": 193.613417,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 42,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 196.355292,
+              "direction": "sent",
+              "contentType": "change_cipher_spec",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 1,
+              "messages": [],
+              "encrypted": false
+            },
+            {
+              "atMs": 197.02008400000003,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 4097,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 197.02008400000003,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 281,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 197.02008400000003,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 53,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 197.02008400000003,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 139,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 200.332209,
+              "direction": "sent",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 53,
+              "messages": [],
+              "encrypted": true
+            }
+          ],
+          "evidence": "observed",
+          "source": "5-byte TLS record headers on bytes we sent/received",
+          "note": "Message names are read only from unencrypted records. Encrypted contents are invisible here, as on the wire."
+        },
+        "roundTrips": {
+          "value": 1,
+          "evidence": "derived",
+          "source": "derive: flights we sent that the server answered (ChangeCipherSpec ignored)"
+        },
+        "version": {
+          "value": "TLS 1.3",
+          "evidence": "observed",
+          "source": "negotiated, reported by our TLS client"
+        },
+        "cipherSuite": {
+          "value": "TLS13_AES_128_GCM_SHA256",
+          "evidence": "observed",
+          "source": "negotiated, reported by our TLS client"
+        },
+        "keyExchange": {
+          "value": "X25519",
+          "evidence": "observed",
+          "source": "negotiated, reported by our TLS client"
+        },
+        "alpn": {
+          "value": "http/1.1",
+          "evidence": "observed",
+          "source": "ALPN extension in the server's reply"
+        },
+        "chain": {
+          "value": [
+            {
+              "subject": "CN=*.vercel.com",
+              "issuer": "C=US, O=Let's Encrypt, CN=YR1",
+              "serial": "05:87:4c:c9:47:8d:b8:b5:8f:4c:1a:ba:b9:8e:b9:94:ab:d1",
+              "notBeforeUnix": 1790338702.0,
+              "notAfterUnix": 1798114701.0,
+              "san": [
+                "*.vercel.com",
+                "vercel.com"
+              ],
+              "publicKey": "RSA 2048 bits",
+              "signatureAlgorithm": "sha256WithRSAEncryption",
+              "isCa": false,
+              "sha256": "71:B5:55:71:8D:92:7E:20:03:D7:CE:FB:07:16:E1:67:8C:5E:82:39:51:BB:A0:DA:66:24:85:63:50:6D:A9:4B",
+              "derBytes": 1282
+            },
+            {
+              "subject": "C=US, O=Let's Encrypt, CN=YR1",
+              "issuer": "C=US, O=ISRG, CN=Root YR",
+              "serial": "00:a2:02:53:f1:5f:26:91:c0:5d:c1:ce:13:b9:bc:ca:4e",
+              "notBeforeUnix": 1756857600.0,
+              "notAfterUnix": 1851551999.0,
+              "san": [],
+              "publicKey": "RSA 2048 bits",
+              "signatureAlgorithm": "sha256WithRSAEncryption",
+              "isCa": true,
+              "sha256": "13:94:96:34:D9:9C:D6:FD:6A:A8:0B:C0:34:FE:FA:CC:EB:19:69:FE:EF:98:65:86:71:3E:CD:BB:05:75:8D:3F",
+              "derBytes": 1247
+            },
+            {
+              "subject": "C=US, O=ISRG, CN=Root YR",
+              "issuer": "C=US, O=Internet Security Research Group, CN=ISRG Root X1",
+              "serial": "00:f2:4b:6d:17:f9:d9:ad:7c:b1:c9:fe:a7:87:82:69:9f",
+              "notBeforeUnix": 1778630400.0,
+              "notAfterUnix": 1977782399.0,
+              "san": [],
+              "publicKey": "RSA 4096 bits",
+              "signatureAlgorithm": "sha256WithRSAEncryption",
+              "isCa": true,
+              "sha256": "07:26:39:D0:B1:40:D5:BF:FA:E1:6A:D9:C3:F6:CC:60:86:04:06:21:F5:1E:E6:1A:6D:46:A8:91:5C:07:CF:76",
+              "derBytes": 1528
+            }
+          ],
+          "evidence": "observed",
+          "source": "Certificate message, decrypted by our TLS client"
+        },
+        "verification": {
+          "value": "valid",
+          "evidence": "observed",
+          "source": "WebPKI verification (rustls-webpki)"
+        }
+      }
+    },
+    {
+      "id": "e6",
+      "hopIndex": 0,
+      "connectionId": "c1",
+      "protocol": "http/1.1",
+      "evidence": "observed",
+      "time": {
+        "start": 202.50575,
+        "end": 202.568209
+      },
+      "from": "app",
+      "to": "server:64.239.109.1",
+      "status": "ok",
+      "explainKey": "http.request",
+      "kind": "http.request",
+      "data": {
+        "method": {
+          "value": "GET",
+          "evidence": "observed",
+          "source": "request line we sent"
+        },
+        "target": {
+          "value": "/",
+          "evidence": "observed",
+          "source": "request line we sent"
+        },
+        "version": {
+          "value": "HTTP/1.1",
+          "evidence": "observed",
+          "source": "request line we sent"
+        },
+        "headers": {
+          "value": [
+            {
+              "name": "Host",
+              "value": "vercel.com"
+            },
+            {
+              "name": "User-Agent",
+              "value": "packet/0.1.0"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "evidence": "observed",
+          "source": "request headers we sent"
+        },
+        "rawHead": {
+          "value": "GET / HTTP/1.1\r\nHost: vercel.com\r\nUser-Agent: packet/0.1.0\r\nAccept: */*\r\n\r\n",
+          "evidence": "observed",
+          "source": "bytes we wrote"
+        },
+        "headBytes": {
+          "value": 75,
+          "evidence": "observed",
+          "source": "bytes we wrote"
+        },
+        "tlsRecords": {
+          "value": [
+            {
+              "atMs": 202.52575000000002,
+              "direction": "sent",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 92,
+              "messages": [],
+              "encrypted": true
+            }
+          ],
+          "evidence": "observed",
+          "source": "5-byte TLS record headers during this phase",
+          "note": "Every record during this phase, both directions, not only the sent HTTP bytes. TLS 1.3 session tickets also arrive here, and on the wire they're indistinguishable from response data."
+        }
+      }
+    },
+    {
+      "id": "e7",
+      "hopIndex": 0,
+      "connectionId": "c1",
+      "protocol": "http/1.1",
+      "evidence": "observed",
+      "time": {
+        "start": 202.568209,
+        "end": 324.167959
+      },
+      "from": "app",
+      "to": "server:64.239.109.1",
+      "status": "ok",
+      "explainKey": "http.response",
+      "kind": "http.response",
+      "data": {
+        "ttfbMs": {
+          "value": 121.06587499999998,
+          "evidence": "observed",
+          "source": "request written → first response byte read",
+          "note": "Includes the trip to the server, its processing time, and the trip back."
+        },
+        "serverTimeEstimateMs": {
+          "value": 91.40674999999997,
+          "evidence": "derived",
+          "source": "derive: TTFB − TCP handshake RTT",
+          "note": "Rough. Assumes the network round trip hasn't changed since the handshake."
+        },
+        "version": {
+          "value": "HTTP/1.1",
+          "evidence": "observed",
+          "source": "response head we received"
+        },
+        "status": {
+          "value": 200,
+          "evidence": "observed",
+          "source": "response head we received"
+        },
+        "reason": {
+          "value": "OK",
+          "evidence": "observed",
+          "source": "response head we received"
+        },
+        "headers": {
+          "value": [
+            {
+              "name": "Accept-Ch",
+              "value": "Sec-CH-Prefers-Color-Scheme"
+            },
+            {
+              "name": "Age",
+              "value": "710"
+            },
+            {
+              "name": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            },
+            {
+              "name": "Content-Length",
+              "value": "626442"
+            },
+            {
+              "name": "Content-Security-Policy",
+              "value": "default-src 'self' vercel.com *.vercel.com assets.vercel.com *.vercel.sh vercel.live wss://*.vercel.com *.codesandbox.io localhost:* chrome-extension://* https://www.youtube-nocookie.com https://risk.clearbit.com https://react-tweet.vercel.app/*;script-src 'self' 'unsafe-eval' 'unsafe-inline' 'inline-speculation-rules' https://snap.licdn.com https://www.youtube.com cdn.vercel-insights.com va.vercel-scripts.com vercel.com *.vercel.com assets.vercel.com *.vercel.sh vercel.live wss://*.vercel.com *.codesandbox.io localhost:* chrome-extension://* https://www.youtube-nocookie.com https://risk.clearbit.com https://react-tweet.vercel.app/* cdp.vercel.com;style-src 'self' 'unsafe-inline' vercel.com *.vercel.com assets.vercel.com *.vercel.sh vercel.live wss://*.vercel.com *.codesandbox.io localhost:* chrome-extension://* https://www.youtube-nocookie.com https://risk.clearbit.com https://react-tweet.vercel.app/*;img-src 'self' blob: data: *.github.io avatars.githubusercontent.com user-images.githubusercontent.com vercel.com vercel.live *.vercel.sh assets.vercel.com cdn.raster.app https://images.ctfassets.net https://www.google.com https://i.ytimg.com https://s3.amazonaws.com pbs.twimg.com https://www.gravatar.com https://lishhsx6kmthaacj.public.blob.vercel-storage.com https://fvqcrhkhgatlyl2m.public.blob.vercel-storage.com;media-src 'self' blob: data: vercel.com *.vercel.com assets.vercel.com *.vercel.sh vercel.live wss://*.vercel.com *.codesandbox.io localhost:* chrome-extension://* https://www.youtube-nocookie.com https://risk.clearbit.com https://react-tweet.vercel.app/*;connect-src 'self' data: *.ingest.sentry.io *.ingest.us.sentry.io wss://ws-us3.pusher.com sockjs-use3.pusher.com react-tweet.vercel.app https://*.contentful.com www.vercel-status.com unpkg.com vercel.com *.vercel.com assets.vercel.com *.vercel.sh vercel.live wss://*.vercel.com *.codesandbox.io localhost:* chrome-extension://* https://www.youtube-nocookie.com https://risk.clearbit.com https://react-tweet.vercel.app/* cdp.vercel.com;font-src 'self' vercel.com assets.vercel.com vercel.live fonts.gstatic.com *.vercel.sh;frame-ancestors  'self'  https://vercel.com  https://app.contentful.com  https://*.contentful.com  https://*.vercel.sh  https://*.vercel.com"
+            },
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Critical-Ch",
+              "value": "Sec-CH-Prefers-Color-Scheme"
+            },
+            {
+              "name": "Date",
+              "value": "Fri, 02 Oct 2026 10:22:53 GMT"
+            },
+            {
+              "name": "Etag",
+              "value": "\"110uz7ud15odfas\""
+            },
+            {
+              "name": "Feature-Policy",
+              "value": "fullscreen 'self'; camera 'none'"
+            },
+            {
+              "name": "Link",
+              "value": "</.well-known/api-catalog>; rel=\"api-catalog\", </.well-known/ai-catalog.json>; rel=\"ai-catalog\"; type=\"application/ai-catalog+json\", </.well-known/agent-skills/index.json>; rel=\"agent-skills\"; type=\"application/json\""
+            },
+            {
+              "name": "Referrer-Policy",
+              "value": "origin-when-cross-origin"
+            },
+            {
+              "name": "Server",
+              "value": "Vercel"
+            },
+            {
+              "name": "Set-Cookie",
+              "value": "_v-consent=%7B%22essential%22%3Atrue%2C%22analytics%22%3Atrue%2C%22marketing%22%3Atrue%2C%22functional%22%3Atrue%2C%22version%22%3A1%7D; Path=/; Expires=Sat, 02 Oct 2027 10:34:44 GMT; Max-Age=31536000; Domain=.vercel.com; Secure; SameSite=lax"
+            },
+            {
+              "name": "Set-Cookie",
+              "value": "_v-visitor-id=dxhcfpYCZRwPf2vzf-v9g; Path=/; Expires=Thu, 31 Dec 2026 10:34:44 GMT; Max-Age=7776000; Domain=.vercel.com; Secure; SameSite=lax"
+            },
+            {
+              "name": "Set-Cookie",
+              "value": "_v-visitor-id-renewed=1; Path=/; Expires=Sat, 03 Oct 2026 10:34:44 GMT; Max-Age=86400; Domain=.vercel.com; Secure; SameSite=lax"
+            },
+            {
+              "name": "Strict-Transport-Security",
+              "value": "max-age=31536000; includeSubDomains; preload"
+            },
+            {
+              "name": "Vary",
+              "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+            },
+            {
+              "name": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "name": "X-Dns-Prefetch-Control",
+              "value": "on"
+            },
+            {
+              "name": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "name": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "name": "X-Matched-Path",
+              "value": "/precomputed/exp~-empty-/home/eyJhbGciOiJIUzI1NiJ9.Af39.HiggoUXvmLu7osIZ-rMgWYCutUna7fynJKQRarwrMT8/redesign-2026"
+            },
+            {
+              "name": "X-Nextjs-Prerender",
+              "value": "1"
+            },
+            {
+              "name": "X-Nextjs-Stale-Time",
+              "value": "300"
+            },
+            {
+              "name": "X-Pathname",
+              "value": "/"
+            },
+            {
+              "name": "X-Powered-By",
+              "value": "Next.js, Payload"
+            },
+            {
+              "name": "X-Vercel-Cache",
+              "value": "HIT"
+            },
+            {
+              "name": "X-Vercel-Id",
+              "value": "cpt1::iad1::qkrfm-1790937284658-16bec87df972"
+            },
+            {
+              "name": "X-Xss-Protection",
+              "value": "0"
+            }
+          ],
+          "evidence": "observed",
+          "source": "response head we received"
+        },
+        "headBytes": {
+          "value": 4053,
+          "evidence": "observed",
+          "source": "response head we received"
+        },
+        "tlsRecords": {
+          "value": [
+            {
+              "atMs": 323.42870899999997,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 1203,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 323.42870899999997,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 2389,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 323.42870899999997,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 512,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 323.42870899999997,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 4761,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 323.42870899999997,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 5947,
+              "messages": [],
+              "encrypted": true
+            }
+          ],
+          "evidence": "observed",
+          "source": "5-byte TLS record headers during this phase",
+          "note": "Every record during this phase, both directions, not only the received HTTP bytes. TLS 1.3 session tickets also arrive here, and on the wire they're indistinguishable from response data."
+        },
+        "edge": {
+          "provider": {
+            "value": "Vercel",
+            "evidence": "observed",
+            "source": "X-Vercel-Id response header"
+          },
+          "code": {
+            "value": "CPT",
+            "evidence": "observed",
+            "source": "X-Vercel-Id response header",
+            "note": "Self-reported by the server. Packet can't verify it, but the RTT can rule it out."
+          },
+          "point": {
+            "value": {
+              "lat": -33.974,
+              "lon": 18.604,
+              "place": "Cape Town, ZA"
+            },
+            "evidence": "derived",
+            "source": "derive: airport code → coordinates (OurAirports)",
+            "note": "CDNs name sites after the nearest airport. The data center is in that metro area, not at the airport."
+          }
+        }
+      }
+    },
+    {
+      "id": "e8",
+      "hopIndex": 0,
+      "connectionId": "c1",
+      "protocol": "http/1.1",
+      "evidence": "observed",
+      "time": {
+        "start": 324.167959,
+        "end": 649.2665840000001
+      },
+      "from": "app",
+      "to": "server:64.239.109.1",
+      "status": "ok",
+      "explainKey": "http.framing.content-length",
+      "kind": "http.body",
+      "data": {
+        "framing": {
+          "value": "content-length",
+          "evidence": "derived",
+          "source": "derive: RFC 9112 §6.3 message body length rules, applied to the response head"
+        },
+        "bodyBytes": {
+          "value": 626442,
+          "evidence": "observed",
+          "source": "body bytes read, framing removed"
+        },
+        "wireBytes": {
+          "value": 626442,
+          "evidence": "observed",
+          "source": "bytes read after the head"
+        },
+        "truncated": {
+          "value": false,
+          "evidence": "observed",
+          "source": "engine body cap / early end",
+          "note": "Packet reads at most 2 MB of body."
+        },
+        "tlsRecords": {
+          "value": [
+            {
+              "atMs": 324.625709,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 7133,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 329.61391699999996,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 8319,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 329.61391699999996,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 6693,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 371.53195900000003,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 10691,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 373.16591700000004,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 11877,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 373.16591700000004,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 1419,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 373.473792,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 14249,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 380.59420900000003,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 11714,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 380.866334,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 15823,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 385.016125,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 413.10870900000003,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 413.265667,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 8147,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 413.479125,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 417.70883399999997,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 417.70883399999997,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 6892,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 419.123709,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 419.123709,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 1531,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 422.320917,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 517.644167,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 517.644167,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 3045,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 517.870084,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 517.900792,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 10480,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 517.9310839999999,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 517.967292,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 10480,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 517.9935839999999,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 517.9935839999999,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 1531,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 518.036834,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 518.06525,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 518.0956249999999,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 518.21575,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 518.283,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 518.33975,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 620.7479999999999,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 636.175292,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 636.342,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 643.3435840000001,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 649.002667,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 649.131667,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 649.150667,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 649.163667,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 649.176792,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 649.176792,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 4829,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 649.196709,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 649.208709,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 649.2202500000001,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 649.2319170000001,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 649.2491249999999,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 6085,
+              "messages": [],
+              "encrypted": true
+            }
+          ],
+          "evidence": "observed",
+          "source": "5-byte TLS record headers during this phase",
+          "note": "Every record during this phase, both directions, not only the received HTTP bytes. TLS 1.3 session tickets also arrive here, and on the wire they're indistinguishable from response data."
+        }
+      }
+    },
+    {
+      "id": "e9",
+      "hopIndex": 0,
+      "connectionId": "c1",
+      "protocol": "tcp",
+      "evidence": "observed",
+      "time": {
+        "start": 649.394417,
+        "end": 683.0855
+      },
+      "from": "app",
+      "to": "server:64.239.109.1",
+      "status": "ok",
+      "explainKey": "tcp.close",
+      "kind": "tcp.close",
+      "data": {
+        "initiatedBy": {
+          "value": "client",
+          "evidence": "observed",
+          "source": "we called shutdown(2) first"
+        },
+        "peerClosed": {
+          "value": true,
+          "evidence": "observed",
+          "source": "read(2) returned 0 (end of stream)"
+        },
+        "kernel": {
+          "value": {
+            "state": "TIME_WAIT",
+            "srttMs": 31,
+            "rttvarMs": 5,
+            "rttLatestMs": 33,
+            "rtoMs": 0,
+            "mss": 1448,
+            "cwndBytes": 14918,
+            "ssthreshBytes": 1073725440,
+            "sendWindowBytes": 66816,
+            "recvWindowBytes": 639360,
+            "sendWindowScale": 8,
+            "recvWindowScale": 6,
+            "options": {
+              "timestamps": true,
+              "sack": true,
+              "windowScaling": true,
+              "ecn": true
+            },
+            "packetsSent": 5,
+            "packetsReceived": 63,
+            "bytesSent": 437,
+            "bytesReceived": 636409,
+            "retransmittedPackets": 0,
+            "retransmittedBytes": 0,
+            "outOfOrderBytes": 135554
+          },
+          "evidence": "observed",
+          "source": "getsockopt(IPPROTO_TCP, TCP_CONNECTION_INFO)",
+          "note": "After both FINs. The side that closed first waits in TIME_WAIT."
+        }
+      }
+    },
+    {
+      "id": "e10",
+      "hopIndex": 0,
+      "protocol": "dns",
+      "evidence": "observed",
+      "time": {
+        "start": 683.546584,
+        "end": 796.51275
+      },
+      "from": "app",
+      "to": "dns:192.168.1.1",
+      "status": "ok",
+      "explainKey": "dns.query",
+      "kind": "dns.query",
+      "data": {
+        "recordType": {
+          "value": "A",
+          "evidence": "observed",
+          "source": "question section we sent"
+        },
+        "qname": {
+          "value": "vercel.com.",
+          "evidence": "observed",
+          "source": "question section we sent"
+        },
+        "server": {
+          "value": {
+            "address": "192.168.1.1",
+            "port": 53
+          },
+          "evidence": "observed",
+          "source": "/etc/resolv.conf: first nameserver"
+        },
+        "local": {
+          "value": {
+            "address": "192.168.1.50",
+            "port": 64111
+          },
+          "evidence": "observed",
+          "source": "getsockname(2) on our UDP socket"
+        },
+        "messageId": {
+          "value": 15704,
+          "evidence": "observed",
+          "source": "header we sent"
+        },
+        "queryBytes": {
+          "value": 28,
+          "evidence": "observed",
+          "source": "UDP payload we sent",
+          "note": "DNS message only. UDP adds 8 header bytes, IP adds 20 (v4) or 40 (v6)."
+        },
+        "response": {
+          "bytes": {
+            "value": 60,
+            "evidence": "observed",
+            "source": "UDP payload received"
+          },
+          "rcode": {
+            "value": "NoError",
+            "evidence": "observed",
+            "source": "dns response header: RCODE"
+          },
+          "flags": {
+            "value": {
+              "authoritative": false,
+              "truncated": false,
+              "recursionDesired": true,
+              "recursionAvailable": true
+            },
+            "evidence": "observed",
+            "source": "dns response header: AA/TC/RD/RA bits"
+          },
+          "answers": {
+            "value": [
+              {
+                "name": "vercel.com.",
+                "recordType": "A",
+                "ttl": 1297,
+                "value": "64.239.109.65"
+              },
+              {
+                "name": "vercel.com.",
+                "recordType": "A",
+                "ttl": 1297,
+                "value": "64.239.123.1"
+              }
+            ],
+            "evidence": "observed",
+            "source": "dns response: answer section"
+          }
+        }
+      }
+    },
+    {
+      "id": "e11",
+      "hopIndex": 0,
+      "protocol": "dns",
+      "evidence": "observed",
+      "time": {
+        "start": 683.811834,
+        "end": 796.418917
+      },
+      "from": "app",
+      "to": "dns:192.168.1.1",
+      "status": "ok",
+      "explainKey": "dns.query",
+      "kind": "dns.query",
+      "data": {
+        "recordType": {
+          "value": "AAAA",
+          "evidence": "observed",
+          "source": "question section we sent"
+        },
+        "qname": {
+          "value": "vercel.com.",
+          "evidence": "observed",
+          "source": "question section we sent"
+        },
+        "server": {
+          "value": {
+            "address": "192.168.1.1",
+            "port": 53
+          },
+          "evidence": "observed",
+          "source": "/etc/resolv.conf: first nameserver"
+        },
+        "local": {
+          "value": {
+            "address": "192.168.1.50",
+            "port": 57186
+          },
+          "evidence": "observed",
+          "source": "getsockname(2) on our UDP socket"
+        },
+        "messageId": {
+          "value": 26047,
+          "evidence": "observed",
+          "source": "header we sent"
+        },
+        "queryBytes": {
+          "value": 28,
+          "evidence": "observed",
+          "source": "UDP payload we sent",
+          "note": "DNS message only. UDP adds 8 header bytes, IP adds 20 (v4) or 40 (v6)."
+        },
+        "response": {
+          "bytes": {
+            "value": 99,
+            "evidence": "observed",
+            "source": "UDP payload received"
+          },
+          "rcode": {
+            "value": "NoError",
+            "evidence": "observed",
+            "source": "dns response header: RCODE"
+          },
+          "flags": {
+            "value": {
+              "authoritative": false,
+              "truncated": false,
+              "recursionDesired": true,
+              "recursionAvailable": true
+            },
+            "evidence": "observed",
+            "source": "dns response header: AA/TC/RD/RA bits"
+          },
+          "answers": {
+            "value": [],
+            "evidence": "observed",
+            "source": "dns response: answer section"
+          }
+        }
+      }
+    }
+  ],
+  "outcome": {
+    "ok": true,
+    "summary": "HTTP 200"
+  }
+}

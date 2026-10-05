@@ -1,26 +1,56 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Packet is a dark instrument. Colour is reserved for protocols, so the
+   network activity itself is the only thing that stands out. */
+@theme {
+  --color-ink: #0a0b0d;          /* page */
+  --color-panel: #0f1013;        /* side panels */
+  --color-raised: #15171b;       /* hover, selected rows */
+  --color-line: #1e2026;         /* hairlines */
+  --color-line-strong: #2b2e36;
+  --color-fg: #e4e5e8;
+  --color-muted: #9094a0;
+  --color-faint: #5d616b;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* One hue per protocol family, desaturated so a full waterfall stays calm. */
+  --color-p-local: #6b7080;      /* URL parsing, engine decisions */
+  --color-p-dns: #a48bf0;
+  --color-p-tcp: #5fa3f0;
+  --color-p-tls: #3fc79a;
+  --color-p-http: #e8b44c;
+  --color-p-error: #ef6461;
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-ink);
+  color: var(--color-fg);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Hatched fill: used for anything explained rather than observed (later views). */
+.hatch {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    color-mix(in srgb, currentColor 35%, transparent) 0 1px,
+    transparent 1px 5px
+  );
+}
+
+/* Quieter hatch for small chips, so the label on top stays readable. */
+.hatch-soft {
+  background-image: repeating-linear-gradient(-45deg, var(--color-line-strong) 0 1px, transparent 1px 6px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

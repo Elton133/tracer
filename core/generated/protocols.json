@@ -1,0 +1,130 @@
+[
+  {
+    "id": "http/1.1",
+    "name": "HTTP/1.1",
+    "osiPrimary": 7,
+    "osiSpan": [
+      7
+    ],
+    "tcpip": "application",
+    "carriedBy": [
+      "tcp",
+      "tls"
+    ]
+  },
+  {
+    "id": "h2",
+    "name": "HTTP/2",
+    "osiPrimary": 7,
+    "osiSpan": [
+      7
+    ],
+    "tcpip": "application",
+    "carriedBy": [
+      "tls"
+    ],
+    "mappingNote": "HTTP/2 is negotiated via TLS ALPN. Browsers only speak it over TLS."
+  },
+  {
+    "id": "dns",
+    "name": "DNS",
+    "osiPrimary": 7,
+    "osiSpan": [
+      7
+    ],
+    "tcpip": "application",
+    "carriedBy": [
+      "udp",
+      "tcp"
+    ],
+    "mappingNote": "Usually a single UDP datagram to port 53. Falls back to TCP for large answers. DoH puts it inside HTTPS."
+  },
+  {
+    "id": "tls",
+    "name": "TLS",
+    "osiPrimary": 6,
+    "osiSpan": [
+      5,
+      6
+    ],
+    "tcpip": "application",
+    "carriedBy": [
+      "tcp"
+    ],
+    "mappingNote": "TLS sits between the application and TCP. OSI has no clean slot for it: 'presentation/session' is a teaching convention, not a spec fact. TCP/IP simply treats it as part of the application."
+  },
+  {
+    "id": "tcp",
+    "name": "TCP",
+    "osiPrimary": 4,
+    "osiSpan": [
+      4
+    ],
+    "tcpip": "transport",
+    "carriedBy": [
+      "ipv4",
+      "ipv6"
+    ]
+  },
+  {
+    "id": "udp",
+    "name": "UDP",
+    "osiPrimary": 4,
+    "osiSpan": [
+      4
+    ],
+    "tcpip": "transport",
+    "carriedBy": [
+      "ipv4",
+      "ipv6"
+    ]
+  },
+  {
+    "id": "ipv4",
+    "name": "IPv4",
+    "osiPrimary": 3,
+    "osiSpan": [
+      3
+    ],
+    "tcpip": "internet",
+    "carriedBy": [
+      "ethernet",
+      "wifi"
+    ]
+  },
+  {
+    "id": "ipv6",
+    "name": "IPv6",
+    "osiPrimary": 3,
+    "osiSpan": [
+      3
+    ],
+    "tcpip": "internet",
+    "carriedBy": [
+      "ethernet",
+      "wifi"
+    ]
+  },
+  {
+    "id": "ethernet",
+    "name": "Ethernet II",
+    "osiPrimary": 2,
+    "osiSpan": [
+      1,
+      2
+    ],
+    "tcpip": "network-access",
+    "carriedBy": []
+  },
+  {
+    "id": "wifi",
+    "name": "802.11 Wi-Fi",
+    "osiPrimary": 2,
+    "osiSpan": [
+      1,
+      2
+    ],
+    "tcpip": "network-access",
+    "carriedBy": []
+  }
+]

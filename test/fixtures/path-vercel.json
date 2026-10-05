@@ -1,0 +1,431 @@
+{
+  "schemaVersion": 1,
+  "id": "5812573a78250284",
+  "target": "64.239.109.1",
+  "method": {
+    "value": "ICMP Echo, TTL 1–30, 3 rounds",
+    "evidence": "observed",
+    "source": "engine method",
+    "note": "Shows the path ICMP takes to this address. TCP packets usually, but not always, take the same one."
+  },
+  "vantage": {
+    "description": "This machine (packet CLI)",
+    "isUserMachine": true,
+    "runtime": "packet 0.1.0"
+  },
+  "startedAtUnixMs": 1790937982986.882,
+  "durationMs": 4828.5945,
+  "hops": [
+    {
+      "ttl": 1,
+      "probes": {
+        "value": [
+          {
+            "round": 0,
+            "rttMs": 5.6714579999999994,
+            "from": "192.168.1.1",
+            "reply": "time-exceeded"
+          },
+          {
+            "round": 1,
+            "rttMs": 6.978166,
+            "from": "192.168.1.1",
+            "reply": "time-exceeded"
+          },
+          {
+            "round": 2,
+            "rttMs": 3.1068749999999996,
+            "from": "192.168.1.1",
+            "reply": "time-exceeded"
+          }
+        ],
+        "evidence": "observed",
+        "source": "ICMP replies to our probes (source address, type, round trip)"
+      },
+      "responders": [
+        {
+          "address": "192.168.1.1",
+          "class": {
+            "value": "private (192.168.0.0/16)",
+            "evidence": "derived",
+            "source": "derive: IANA special-purpose address ranges"
+          },
+          "maxKm": {
+            "value": 310.68749999999994,
+            "evidence": "derived",
+            "source": "derive: ½ fastest RTT × 200 km/ms (light in fibre)",
+            "note": "Includes the router's own reply delay, so the true distance is smaller still."
+          }
+        }
+      ]
+    },
+    {
+      "ttl": 2,
+      "probes": {
+        "value": [
+          {
+            "round": 0,
+            "rttMs": 29.491333,
+            "from": "100.64.0.1",
+            "reply": "time-exceeded"
+          },
+          {
+            "round": 1,
+            "rttMs": 35.594874999999995,
+            "from": "100.64.0.1",
+            "reply": "time-exceeded"
+          },
+          {
+            "round": 2,
+            "rttMs": 27.013958000000002,
+            "from": "100.64.0.1",
+            "reply": "time-exceeded"
+          }
+        ],
+        "evidence": "observed",
+        "source": "ICMP replies to our probes (source address, type, round trip)"
+      },
+      "responders": [
+        {
+          "address": "100.64.0.1",
+          "class": {
+            "value": "carrier-grade NAT shared space (100.64.0.0/10)",
+            "evidence": "derived",
+            "source": "derive: IANA special-purpose address ranges"
+          },
+          "maxKm": {
+            "value": 2701.3958000000002,
+            "evidence": "derived",
+            "source": "derive: ½ fastest RTT × 200 km/ms (light in fibre)",
+            "note": "Includes the router's own reply delay, so the true distance is smaller still."
+          }
+        }
+      ]
+    },
+    {
+      "ttl": 3,
+      "probes": {
+        "value": [
+          {
+            "round": 0,
+            "rttMs": 31.220417,
+            "from": "172.16.250.70",
+            "reply": "time-exceeded"
+          },
+          {
+            "round": 1,
+            "rttMs": 22.263417,
+            "from": "172.16.250.70",
+            "reply": "time-exceeded"
+          },
+          {
+            "round": 2,
+            "rttMs": 26.875666,
+            "from": "172.16.250.70",
+            "reply": "time-exceeded"
+          }
+        ],
+        "evidence": "observed",
+        "source": "ICMP replies to our probes (source address, type, round trip)"
+      },
+      "responders": [
+        {
+          "address": "172.16.250.70",
+          "class": {
+            "value": "private (172.16.0.0/12)",
+            "evidence": "derived",
+            "source": "derive: IANA special-purpose address ranges"
+          },
+          "maxKm": {
+            "value": 2226.3417,
+            "evidence": "derived",
+            "source": "derive: ½ fastest RTT × 200 km/ms (light in fibre)",
+            "note": "Includes the router's own reply delay, so the true distance is smaller still."
+          }
+        }
+      ]
+    },
+    {
+      "ttl": 4,
+      "probes": {
+        "value": [
+          {
+            "round": 0,
+            "rttMs": 75.030958,
+            "from": "206.224.70.122",
+            "reply": "time-exceeded"
+          },
+          {
+            "round": 1,
+            "rttMs": 25.799042,
+            "from": "206.224.70.122",
+            "reply": "time-exceeded"
+          },
+          {
+            "round": 2,
+            "rttMs": 28.189459,
+            "from": "206.224.70.122",
+            "reply": "time-exceeded"
+          }
+        ],
+        "evidence": "observed",
+        "source": "ICMP replies to our probes (source address, type, round trip)"
+      },
+      "responders": [
+        {
+          "address": "206.224.70.122",
+          "location": {
+            "value": {
+              "lat": 33.9205,
+              "lon": -118.328,
+              "place": "Hawthorne, US"
+            },
+            "evidence": "derived",
+            "source": "IP geolocation: DB-IP Lite city 2026-10 (CC BY 4.0)",
+            "note": "A database estimate for this address block, not a measurement. CDN and anycast addresses are often placed at the company's headquarters."
+          },
+          "maxKm": {
+            "value": 2579.9042,
+            "evidence": "derived",
+            "source": "derive: ½ fastest RTT × 200 km/ms (light in fibre)",
+            "note": "Includes the router's own reply delay, so the true distance is smaller still."
+          }
+        }
+      ]
+    },
+    {
+      "ttl": 5,
+      "probes": {
+        "value": [
+          {
+            "round": 0,
+            "rttMs": 27.266792000000002,
+            "from": "206.224.77.199",
+            "reply": "time-exceeded"
+          },
+          {
+            "round": 1,
+            "rttMs": 29.725084,
+            "from": "206.224.77.199",
+            "reply": "time-exceeded"
+          },
+          {
+            "round": 2,
+            "rttMs": 19.394000000000002,
+            "from": "206.224.77.199",
+            "reply": "time-exceeded"
+          }
+        ],
+        "evidence": "observed",
+        "source": "ICMP replies to our probes (source address, type, round trip)"
+      },
+      "responders": [
+        {
+          "address": "206.224.77.199",
+          "location": {
+            "value": {
+              "lat": 33.9205,
+              "lon": -118.328,
+              "place": "Hawthorne, US"
+            },
+            "evidence": "derived",
+            "source": "IP geolocation: DB-IP Lite city 2026-10 (CC BY 4.0)",
+            "note": "A database estimate for this address block, not a measurement. CDN and anycast addresses are often placed at the company's headquarters."
+          },
+          "maxKm": {
+            "value": 1939.4,
+            "evidence": "derived",
+            "source": "derive: ½ fastest RTT × 200 km/ms (light in fibre)",
+            "note": "Includes the router's own reply delay, so the true distance is smaller still."
+          }
+        }
+      ]
+    },
+    {
+      "ttl": 6,
+      "probes": {
+        "value": [
+          {
+            "round": 0
+          },
+          {
+            "round": 1
+          },
+          {
+            "round": 2
+          }
+        ],
+        "evidence": "observed",
+        "source": "ICMP replies to our probes (source address, type, round trip)"
+      },
+      "responders": []
+    },
+    {
+      "ttl": 7,
+      "probes": {
+        "value": [
+          {
+            "round": 0
+          },
+          {
+            "round": 1
+          },
+          {
+            "round": 2
+          }
+        ],
+        "evidence": "observed",
+        "source": "ICMP replies to our probes (source address, type, round trip)"
+      },
+      "responders": []
+    },
+    {
+      "ttl": 8,
+      "probes": {
+        "value": [
+          {
+            "round": 0
+          },
+          {
+            "round": 1
+          },
+          {
+            "round": 2
+          }
+        ],
+        "evidence": "observed",
+        "source": "ICMP replies to our probes (source address, type, round trip)"
+      },
+      "responders": []
+    },
+    {
+      "ttl": 9,
+      "probes": {
+        "value": [
+          {
+            "round": 0
+          },
+          {
+            "round": 1
+          },
+          {
+            "round": 2
+          }
+        ],
+        "evidence": "observed",
+        "source": "ICMP replies to our probes (source address, type, round trip)"
+      },
+      "responders": []
+    },
+    {
+      "ttl": 10,
+      "probes": {
+        "value": [
+          {
+            "round": 0
+          },
+          {
+            "round": 1
+          },
+          {
+            "round": 2
+          }
+        ],
+        "evidence": "observed",
+        "source": "ICMP replies to our probes (source address, type, round trip)"
+      },
+      "responders": []
+    },
+    {
+      "ttl": 11,
+      "probes": {
+        "value": [
+          {
+            "round": 0
+          },
+          {
+            "round": 1
+          },
+          {
+            "round": 2
+          }
+        ],
+        "evidence": "observed",
+        "source": "ICMP replies to our probes (source address, type, round trip)"
+      },
+      "responders": []
+    },
+    {
+      "ttl": 12,
+      "probes": {
+        "value": [
+          {
+            "round": 0
+          },
+          {
+            "round": 1
+          },
+          {
+            "round": 2
+          }
+        ],
+        "evidence": "observed",
+        "source": "ICMP replies to our probes (source address, type, round trip)"
+      },
+      "responders": []
+    },
+    {
+      "ttl": 13,
+      "probes": {
+        "value": [
+          {
+            "round": 0,
+            "rttMs": 31.930208,
+            "from": "64.239.109.1",
+            "reply": "echo-reply"
+          },
+          {
+            "round": 1,
+            "rttMs": 25.13325,
+            "from": "64.239.109.1",
+            "reply": "echo-reply"
+          },
+          {
+            "round": 2,
+            "rttMs": 30.668582999999998,
+            "from": "64.239.109.1",
+            "reply": "echo-reply"
+          }
+        ],
+        "evidence": "observed",
+        "source": "ICMP replies to our probes (source address, type, round trip)"
+      },
+      "responders": [
+        {
+          "address": "64.239.109.1",
+          "location": {
+            "value": {
+              "lat": 34.0119,
+              "lon": -117.86,
+              "place": "Walnut, US"
+            },
+            "evidence": "derived",
+            "source": "IP geolocation: DB-IP Lite city 2026-10 (CC BY 4.0)",
+            "note": "A database estimate for this address block, not a measurement. CDN and anycast addresses are often placed at the company's headquarters."
+          },
+          "maxKm": {
+            "value": 2513.325,
+            "evidence": "derived",
+            "source": "derive: ½ fastest RTT × 200 km/ms (light in fibre)",
+            "note": "Includes the router's own reply delay, so the true distance is smaller still."
+          }
+        }
+      ]
+    }
+  ],
+  "reached": {
+    "value": true,
+    "evidence": "observed",
+    "source": "an Echo Reply from the target"
+  }
+}

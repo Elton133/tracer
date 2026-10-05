@@ -1,0 +1,1851 @@
+{
+  "schemaVersion": 1,
+  "id": "b045b4b86cf7907d",
+  "kind": "observed",
+  "source": "web-trace",
+  "input": {
+    "url": "http://github.com",
+    "followRedirects": true
+  },
+  "vantage": {
+    "description": "This machine (packet CLI)",
+    "isUserMachine": true,
+    "runtime": "packet 0.1.0 on macos-aarch64"
+  },
+  "startedAtUnixMs": 1790930656269.981,
+  "entities": [
+    {
+      "id": "app",
+      "role": "client-app",
+      "label": "Packet engine",
+      "addresses": [],
+      "evidence": "observed"
+    },
+    {
+      "id": "os-resolver",
+      "role": "os-resolver",
+      "label": "Operating system resolver",
+      "addresses": [],
+      "evidence": "observed"
+    },
+    {
+      "id": "server:140.82.121.4",
+      "role": "server",
+      "label": "github.com",
+      "addresses": [
+        {
+          "value": "140.82.121.4",
+          "evidence": "observed",
+          "source": "address passed to connect(2)"
+        }
+      ],
+      "evidence": "observed"
+    },
+    {
+      "id": "dns:172.20.10.1",
+      "role": "dns-server",
+      "label": "DNS resolver 172.20.10.1",
+      "addresses": [
+        {
+          "value": "172.20.10.1",
+          "evidence": "observed",
+          "source": "address we sent queries to"
+        }
+      ],
+      "evidence": "observed"
+    }
+  ],
+  "hops": [
+    {
+      "index": 0,
+      "url": "http://github.com/",
+      "connectionId": "c1",
+      "status": 301,
+      "redirectTo": "https://github.com/"
+    },
+    {
+      "index": 1,
+      "url": "https://github.com/",
+      "connectionId": "c2",
+      "status": 200
+    }
+  ],
+  "events": [
+    {
+      "id": "e1",
+      "hopIndex": 0,
+      "evidence": "observed",
+      "time": {
+        "start": 0.238292
+      },
+      "status": "ok",
+      "kind": "url.parse",
+      "data": {
+        "input": {
+          "value": "http://github.com",
+          "evidence": "observed",
+          "source": "user input"
+        },
+        "scheme": {
+          "value": "http",
+          "evidence": "derived",
+          "source": "WHATWG URL parsing (url crate)"
+        },
+        "host": {
+          "value": "github.com",
+          "evidence": "derived",
+          "source": "WHATWG URL parsing (url crate)"
+        },
+        "hostKind": {
+          "value": "domain",
+          "evidence": "derived",
+          "source": "WHATWG URL parsing (url crate)"
+        },
+        "port": {
+          "value": 80,
+          "evidence": "derived",
+          "source": "derive: default port for http"
+        },
+        "path": {
+          "value": "/",
+          "evidence": "derived",
+          "source": "WHATWG URL parsing (url crate)",
+          "note": "Path and query only. A #fragment is never sent to the server; it stays in the client."
+        }
+      }
+    },
+    {
+      "id": "e2",
+      "hopIndex": 0,
+      "protocol": "dns",
+      "evidence": "observed",
+      "time": {
+        "start": 1.002459,
+        "end": 178.612584
+      },
+      "from": "app",
+      "to": "os-resolver",
+      "status": "ok",
+      "explainKey": "dns.os-resolver",
+      "kind": "dns.lookup",
+      "data": {
+        "hostname": {
+          "value": "github.com",
+          "evidence": "observed",
+          "source": "argument to getaddrinfo(3)"
+        },
+        "addresses": {
+          "value": [
+            "140.82.121.4"
+          ],
+          "evidence": "observed",
+          "source": "getaddrinfo(3) result, in returned order",
+          "note": "The OS may have answered from its cache, so this duration can be near zero."
+        }
+      }
+    },
+    {
+      "id": "e3",
+      "hopIndex": 0,
+      "evidence": "observed",
+      "time": {
+        "start": 178.74354200000002
+      },
+      "status": "ok",
+      "explainKey": "guard.ssrf",
+      "kind": "guard.check",
+      "data": {
+        "policy": {
+          "value": "public-only",
+          "evidence": "observed",
+          "source": "engine configuration"
+        },
+        "verdicts": {
+          "value": [
+            {
+              "address": "140.82.121.4",
+              "allowed": true
+            }
+          ],
+          "evidence": "derived",
+          "source": "derive: address ranges from IANA special-purpose registries"
+        }
+      }
+    },
+    {
+      "id": "e4",
+      "hopIndex": 0,
+      "connectionId": "c1",
+      "protocol": "tcp",
+      "evidence": "observed",
+      "time": {
+        "start": 178.90070899999998,
+        "end": 420.021792
+      },
+      "from": "app",
+      "to": "server:140.82.121.4",
+      "status": "ok",
+      "explainKey": "tcp.handshake",
+      "kind": "tcp.connect",
+      "data": {
+        "remote": {
+          "value": {
+            "address": "140.82.121.4",
+            "port": 80
+          },
+          "evidence": "observed",
+          "source": "address passed to connect(2)"
+        },
+        "addressChoice": {
+          "value": "first of 1 allowed address(es) getaddrinfo returned",
+          "evidence": "derived",
+          "source": "engine address selection"
+        },
+        "local": {
+          "value": {
+            "address": "172.20.10.3",
+            "port": 57908
+          },
+          "evidence": "observed",
+          "source": "getsockname(2)",
+          "note": "Before NAT. The server sees your public address."
+        },
+        "rttEstimateMs": {
+          "value": 241.12108300000003,
+          "evidence": "derived",
+          "source": "derive: connect() duration ≈ 1 RTT (SYN out → SYN-ACK back) + local scheduling"
+        },
+        "nodelay": {
+          "value": true,
+          "evidence": "observed",
+          "source": "setsockopt(TCP_NODELAY), read back with getsockopt"
+        },
+        "kernel": {
+          "value": {
+            "state": "ESTABLISHED",
+            "srttMs": 241,
+            "rttvarMs": 120,
+            "rttLatestMs": 241,
+            "rtoMs": 0,
+            "mss": 1388,
+            "cwndBytes": 13880,
+            "ssthreshBytes": 1073725440,
+            "sendWindowBytes": 65535,
+            "recvWindowBytes": 131904,
+            "sendWindowScale": 10,
+            "recvWindowScale": 6,
+            "options": {
+              "timestamps": true,
+              "sack": true,
+              "windowScaling": true,
+              "ecn": true
+            },
+            "packetsSent": 0,
+            "packetsReceived": 0,
+            "bytesSent": 0,
+            "bytesReceived": 0,
+            "retransmittedPackets": 0,
+            "retransmittedBytes": 0,
+            "outOfOrderBytes": 0
+          },
+          "evidence": "observed",
+          "source": "getsockopt(IPPROTO_TCP, TCP_CONNECTION_INFO)",
+          "note": "Right after the handshake. The RTT here is from one sample: the SYN → SYN-ACK."
+        }
+      }
+    },
+    {
+      "id": "e5",
+      "hopIndex": 0,
+      "connectionId": "c1",
+      "protocol": "http/1.1",
+      "evidence": "observed",
+      "time": {
+        "start": 420.44100000000003,
+        "end": 420.699834
+      },
+      "from": "app",
+      "to": "server:140.82.121.4",
+      "status": "ok",
+      "explainKey": "http.request",
+      "kind": "http.request",
+      "data": {
+        "method": {
+          "value": "GET",
+          "evidence": "observed",
+          "source": "request line we sent"
+        },
+        "target": {
+          "value": "/",
+          "evidence": "observed",
+          "source": "request line we sent"
+        },
+        "version": {
+          "value": "HTTP/1.1",
+          "evidence": "observed",
+          "source": "request line we sent"
+        },
+        "headers": {
+          "value": [
+            {
+              "name": "Host",
+              "value": "github.com"
+            },
+            {
+              "name": "User-Agent",
+              "value": "packet/0.1.0"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "evidence": "observed",
+          "source": "request headers we sent"
+        },
+        "rawHead": {
+          "value": "GET / HTTP/1.1\r\nHost: github.com\r\nUser-Agent: packet/0.1.0\r\nAccept: */*\r\n\r\n",
+          "evidence": "observed",
+          "source": "bytes we wrote"
+        },
+        "headBytes": {
+          "value": 75,
+          "evidence": "observed",
+          "source": "bytes we wrote"
+        }
+      }
+    },
+    {
+      "id": "e6",
+      "hopIndex": 0,
+      "connectionId": "c1",
+      "protocol": "http/1.1",
+      "evidence": "observed",
+      "time": {
+        "start": 420.699834,
+        "end": 647.98875
+      },
+      "from": "app",
+      "to": "server:140.82.121.4",
+      "status": "ok",
+      "explainKey": "http.response",
+      "kind": "http.response",
+      "data": {
+        "ttfbMs": {
+          "value": 227.109875,
+          "evidence": "observed",
+          "source": "request written → first response byte read",
+          "note": "Includes the trip to the server, its processing time, and the trip back."
+        },
+        "serverTimeEstimateMs": {
+          "value": 0.0,
+          "evidence": "derived",
+          "source": "derive: TTFB − TCP handshake RTT",
+          "note": "Rough. Assumes the network round trip hasn't changed since the handshake."
+        },
+        "version": {
+          "value": "HTTP/1.1",
+          "evidence": "observed",
+          "source": "response head we received"
+        },
+        "status": {
+          "value": 301,
+          "evidence": "observed",
+          "source": "response head we received"
+        },
+        "reason": {
+          "value": "Moved Permanently",
+          "evidence": "observed",
+          "source": "response head we received"
+        },
+        "headers": {
+          "value": [
+            {
+              "name": "Content-Length",
+              "value": "0"
+            },
+            {
+              "name": "Location",
+              "value": "https://github.com/"
+            }
+          ],
+          "evidence": "observed",
+          "source": "response head we received"
+        },
+        "headBytes": {
+          "value": 84,
+          "evidence": "observed",
+          "source": "response head we received"
+        }
+      }
+    },
+    {
+      "id": "e7",
+      "hopIndex": 0,
+      "connectionId": "c1",
+      "protocol": "http/1.1",
+      "evidence": "observed",
+      "time": {
+        "start": 647.98875,
+        "end": 648.267
+      },
+      "from": "app",
+      "to": "server:140.82.121.4",
+      "status": "ok",
+      "explainKey": "http.framing.content-length",
+      "kind": "http.body",
+      "data": {
+        "framing": {
+          "value": "content-length",
+          "evidence": "derived",
+          "source": "derive: RFC 9112 §6.3 message body length rules, applied to the response head"
+        },
+        "bodyBytes": {
+          "value": 0,
+          "evidence": "observed",
+          "source": "body bytes read, framing removed"
+        },
+        "wireBytes": {
+          "value": 0,
+          "evidence": "observed",
+          "source": "bytes read after the head"
+        },
+        "truncated": {
+          "value": false,
+          "evidence": "observed",
+          "source": "engine body cap / early end",
+          "note": "Packet reads at most 2 MB of body."
+        }
+      }
+    },
+    {
+      "id": "e8",
+      "hopIndex": 0,
+      "connectionId": "c1",
+      "protocol": "tcp",
+      "evidence": "observed",
+      "time": {
+        "start": 648.3296670000001,
+        "end": 1602.096959
+      },
+      "from": "app",
+      "to": "server:140.82.121.4",
+      "status": "ok",
+      "explainKey": "tcp.close",
+      "kind": "tcp.close",
+      "data": {
+        "initiatedBy": {
+          "value": "client",
+          "evidence": "observed",
+          "source": "we called shutdown(2) first"
+        },
+        "peerClosed": {
+          "value": true,
+          "evidence": "observed",
+          "source": "read(2) returned 0 (end of stream)"
+        },
+        "kernel": {
+          "value": {
+            "state": "TIME_WAIT",
+            "srttMs": 328,
+            "rttvarMs": 248,
+            "rttLatestMs": 953,
+            "rtoMs": 0,
+            "mss": 1388,
+            "cwndBytes": 1389,
+            "ssthreshBytes": 9716,
+            "sendWindowBytes": 65536,
+            "recvWindowBytes": 131840,
+            "sendWindowScale": 10,
+            "recvWindowScale": 6,
+            "options": {
+              "timestamps": true,
+              "sack": true,
+              "windowScaling": true,
+              "ecn": true
+            },
+            "packetsSent": 1,
+            "packetsReceived": 2,
+            "bytesSent": 75,
+            "bytesReceived": 84,
+            "retransmittedPackets": 0,
+            "retransmittedBytes": 0,
+            "outOfOrderBytes": 0
+          },
+          "evidence": "observed",
+          "source": "getsockopt(IPPROTO_TCP, TCP_CONNECTION_INFO)",
+          "note": "After both FINs. The side that closed first waits in TIME_WAIT."
+        }
+      }
+    },
+    {
+      "id": "e9",
+      "hopIndex": 0,
+      "protocol": "http/1.1",
+      "evidence": "observed",
+      "time": {
+        "start": 1602.299709
+      },
+      "status": "ok",
+      "explainKey": "http.redirect.301",
+      "kind": "http.redirect",
+      "data": {
+        "status": {
+          "value": 301,
+          "evidence": "observed",
+          "source": "response status line"
+        },
+        "location": {
+          "value": "https://github.com/",
+          "evidence": "observed",
+          "source": "Location header"
+        },
+        "nextUrl": {
+          "value": "https://github.com/",
+          "evidence": "derived",
+          "source": "derive: Location resolved against the current URL (RFC 3986 §5)"
+        },
+        "crossOrigin": {
+          "value": true,
+          "evidence": "derived",
+          "source": "derive: compare scheme, host and port"
+        },
+        "preservesMethod": {
+          "value": false,
+          "evidence": "derived",
+          "source": "derive: RFC 9110 §15.4 status semantics"
+        },
+        "permanent": {
+          "value": true,
+          "evidence": "derived",
+          "source": "derive: RFC 9110 §15.4 status semantics"
+        }
+      }
+    },
+    {
+      "id": "e10",
+      "hopIndex": 1,
+      "evidence": "observed",
+      "time": {
+        "start": 1602.476334
+      },
+      "status": "ok",
+      "kind": "url.parse",
+      "data": {
+        "input": {
+          "value": "https://github.com/",
+          "evidence": "observed",
+          "source": "user input"
+        },
+        "scheme": {
+          "value": "https",
+          "evidence": "derived",
+          "source": "WHATWG URL parsing (url crate)"
+        },
+        "host": {
+          "value": "github.com",
+          "evidence": "derived",
+          "source": "WHATWG URL parsing (url crate)"
+        },
+        "hostKind": {
+          "value": "domain",
+          "evidence": "derived",
+          "source": "WHATWG URL parsing (url crate)"
+        },
+        "port": {
+          "value": 443,
+          "evidence": "derived",
+          "source": "derive: default port for https"
+        },
+        "path": {
+          "value": "/",
+          "evidence": "derived",
+          "source": "WHATWG URL parsing (url crate)",
+          "note": "Path and query only. A #fragment is never sent to the server; it stays in the client."
+        }
+      }
+    },
+    {
+      "id": "e11",
+      "hopIndex": 1,
+      "protocol": "dns",
+      "evidence": "observed",
+      "time": {
+        "start": 1602.532167,
+        "end": 1606.0611250000002
+      },
+      "from": "app",
+      "to": "os-resolver",
+      "status": "ok",
+      "explainKey": "dns.os-resolver",
+      "kind": "dns.lookup",
+      "data": {
+        "hostname": {
+          "value": "github.com",
+          "evidence": "observed",
+          "source": "argument to getaddrinfo(3)"
+        },
+        "addresses": {
+          "value": [
+            "140.82.121.4"
+          ],
+          "evidence": "observed",
+          "source": "getaddrinfo(3) result, in returned order",
+          "note": "The OS may have answered from its cache, so this duration can be near zero."
+        }
+      }
+    },
+    {
+      "id": "e12",
+      "hopIndex": 1,
+      "evidence": "observed",
+      "time": {
+        "start": 1606.097209
+      },
+      "status": "ok",
+      "explainKey": "guard.ssrf",
+      "kind": "guard.check",
+      "data": {
+        "policy": {
+          "value": "public-only",
+          "evidence": "observed",
+          "source": "engine configuration"
+        },
+        "verdicts": {
+          "value": [
+            {
+              "address": "140.82.121.4",
+              "allowed": true
+            }
+          ],
+          "evidence": "derived",
+          "source": "derive: address ranges from IANA special-purpose registries"
+        }
+      }
+    },
+    {
+      "id": "e13",
+      "hopIndex": 1,
+      "connectionId": "c2",
+      "protocol": "tcp",
+      "evidence": "observed",
+      "time": {
+        "start": 1606.131917,
+        "end": 1836.2920840000002
+      },
+      "from": "app",
+      "to": "server:140.82.121.4",
+      "status": "ok",
+      "explainKey": "tcp.handshake",
+      "kind": "tcp.connect",
+      "data": {
+        "remote": {
+          "value": {
+            "address": "140.82.121.4",
+            "port": 443
+          },
+          "evidence": "observed",
+          "source": "address passed to connect(2)"
+        },
+        "addressChoice": {
+          "value": "first of 1 allowed address(es) getaddrinfo returned",
+          "evidence": "derived",
+          "source": "engine address selection"
+        },
+        "local": {
+          "value": {
+            "address": "172.20.10.3",
+            "port": 57909
+          },
+          "evidence": "observed",
+          "source": "getsockname(2)",
+          "note": "Before NAT. The server sees your public address."
+        },
+        "rttEstimateMs": {
+          "value": 230.16016700000023,
+          "evidence": "derived",
+          "source": "derive: connect() duration ≈ 1 RTT (SYN out → SYN-ACK back) + local scheduling"
+        },
+        "nodelay": {
+          "value": true,
+          "evidence": "observed",
+          "source": "setsockopt(TCP_NODELAY), read back with getsockopt"
+        },
+        "kernel": {
+          "value": {
+            "state": "ESTABLISHED",
+            "srttMs": 229,
+            "rttvarMs": 114,
+            "rttLatestMs": 229,
+            "rtoMs": 0,
+            "mss": 1388,
+            "cwndBytes": 13880,
+            "ssthreshBytes": 1073725440,
+            "sendWindowBytes": 65535,
+            "recvWindowBytes": 131904,
+            "sendWindowScale": 10,
+            "recvWindowScale": 6,
+            "options": {
+              "timestamps": true,
+              "sack": true,
+              "windowScaling": true,
+              "ecn": true
+            },
+            "packetsSent": 0,
+            "packetsReceived": 0,
+            "bytesSent": 0,
+            "bytesReceived": 0,
+            "retransmittedPackets": 0,
+            "retransmittedBytes": 0,
+            "outOfOrderBytes": 0
+          },
+          "evidence": "observed",
+          "source": "getsockopt(IPPROTO_TCP, TCP_CONNECTION_INFO)",
+          "note": "Right after the handshake. The RTT here is from one sample: the SYN → SYN-ACK."
+        }
+      }
+    },
+    {
+      "id": "e14",
+      "hopIndex": 1,
+      "connectionId": "c2",
+      "protocol": "tls",
+      "evidence": "observed",
+      "time": {
+        "start": 1839.9999999999998,
+        "end": 2085.7425420000004
+      },
+      "from": "app",
+      "to": "server:140.82.121.4",
+      "status": "ok",
+      "explainKey": "tls.handshake",
+      "kind": "tls.handshake",
+      "data": {
+        "sni": {
+          "value": "github.com",
+          "evidence": "observed",
+          "source": "ClientHello server_name extension we sent"
+        },
+        "alpnOffered": {
+          "value": [
+            "http/1.1"
+          ],
+          "evidence": "observed",
+          "source": "ClientHello ALPN extension we sent"
+        },
+        "trustStore": {
+          "value": "Mozilla root program (webpki-roots), not the macOS Keychain",
+          "evidence": "observed",
+          "source": "engine configuration",
+          "note": "A certificate trusted only through your Keychain (e.g. a corporate proxy CA) fails here but works in Safari."
+        },
+        "records": {
+          "value": [
+            {
+              "atMs": 1840.089542,
+              "direction": "sent",
+              "contentType": "handshake",
+              "recordVersion": "0x0301 (TLS 1.0)",
+              "length": 247,
+              "messages": [
+                "ClientHello"
+              ],
+              "encrypted": false
+            },
+            {
+              "atMs": 2076.5638750000003,
+              "direction": "received",
+              "contentType": "handshake",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 122,
+              "messages": [
+                "ServerHello"
+              ],
+              "encrypted": false
+            },
+            {
+              "atMs": 2076.5638750000003,
+              "direction": "received",
+              "contentType": "change_cipher_spec",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 1,
+              "messages": [],
+              "encrypted": false
+            },
+            {
+              "atMs": 2076.5638750000003,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 42,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 2076.5638750000003,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 2758,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 2076.5638750000003,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 96,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 2076.5638750000003,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 53,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 2085.6031669999998,
+              "direction": "sent",
+              "contentType": "change_cipher_spec",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 1,
+              "messages": [],
+              "encrypted": false
+            },
+            {
+              "atMs": 2085.6031669999998,
+              "direction": "sent",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 53,
+              "messages": [],
+              "encrypted": true
+            }
+          ],
+          "evidence": "observed",
+          "source": "5-byte TLS record headers on bytes we sent/received",
+          "note": "Message names are read only from unencrypted records. Encrypted contents are invisible here, as on the wire."
+        },
+        "roundTrips": {
+          "value": 1,
+          "evidence": "derived",
+          "source": "derive: flights we sent that the server answered (ChangeCipherSpec ignored)"
+        },
+        "version": {
+          "value": "TLS 1.3",
+          "evidence": "observed",
+          "source": "negotiated, reported by our TLS client"
+        },
+        "cipherSuite": {
+          "value": "TLS13_AES_128_GCM_SHA256",
+          "evidence": "observed",
+          "source": "negotiated, reported by our TLS client"
+        },
+        "keyExchange": {
+          "value": "X25519",
+          "evidence": "observed",
+          "source": "negotiated, reported by our TLS client"
+        },
+        "alpn": {
+          "value": "http/1.1",
+          "evidence": "observed",
+          "source": "ALPN extension in the server's reply"
+        },
+        "chain": {
+          "value": [
+            {
+              "subject": "CN=github.com",
+              "issuer": "C=GB, O=Sectigo Limited, CN=Sectigo Public Server Authentication CA DV E36",
+              "serial": "00:a5:9e:bd:b5:96:75:1d:b7:f5:c0:95:07:96:13:95:3c",
+              "notBeforeUnix": 1788220800.0,
+              "notAfterUnix": 1795996799.0,
+              "san": [
+                "github.com",
+                "www.github.com"
+              ],
+              "publicKey": "EC 256 bits",
+              "signatureAlgorithm": "ecdsa-with-SHA256",
+              "isCa": false,
+              "sha256": "46:B6:01:EE:08:B4:18:CF:8A:3A:1E:BF:E6:70:BA:5C:E4:3B:B0:5A:91:7F:A8:B2:DD:08:7A:30:47:1C:FC:63",
+              "derBytes": 1009
+            },
+            {
+              "subject": "C=GB, O=Sectigo Limited, CN=Sectigo Public Server Authentication CA DV E36",
+              "issuer": "C=GB, O=Sectigo Limited, CN=Sectigo Public Server Authentication Root E46",
+              "serial": "36:e0:59:ed:88:8d:d5:7a:ed:d5:70:b6:72:7f:9b:da",
+              "notBeforeUnix": 1616371200.0,
+              "notAfterUnix": 2089756799.0,
+              "san": [],
+              "publicKey": "EC 256 bits",
+              "signatureAlgorithm": "ecdsa-with-SHA384",
+              "isCa": true,
+              "sha256": "87:3F:0B:A8:0E:3A:C2:22:65:6D:FD:04:15:8C:C1:5C:29:27:D4:2D:5D:05:F0:1D:EE:4A:47:EB:43:A9:16:DF",
+              "derBytes": 867
+            },
+            {
+              "subject": "C=GB, O=Sectigo Limited, CN=Sectigo Public Server Authentication Root E46",
+              "issuer": "C=US, ST=New Jersey, L=Jersey City, O=The USERTRUST Network, CN=USERTrust ECC Certification Authority",
+              "serial": "1a:9e:af:ec:6d:e8:e1:9b:5c:19:31:41:b6:8d:90:dd",
+              "notBeforeUnix": 1616371200.0,
+              "notAfterUnix": 2147471999.0,
+              "san": [],
+              "publicKey": "EC 384 bits",
+              "signatureAlgorithm": "ecdsa-with-SHA384",
+              "isCa": true,
+              "sha256": "EA:6B:89:ED:69:07:A2:09:FF:91:88:67:6F:B1:64:E7:AC:ED:89:4B:89:96:DF:BE:5C:E5:BB:CC:22:DE:4D:DD",
+              "derBytes": 842
+            }
+          ],
+          "evidence": "observed",
+          "source": "Certificate message, decrypted by our TLS client"
+        },
+        "verification": {
+          "value": "valid",
+          "evidence": "observed",
+          "source": "WebPKI verification (rustls-webpki)"
+        }
+      }
+    },
+    {
+      "id": "e15",
+      "hopIndex": 1,
+      "connectionId": "c2",
+      "protocol": "http/1.1",
+      "evidence": "observed",
+      "time": {
+        "start": 2087.1879999999996,
+        "end": 2087.309667
+      },
+      "from": "app",
+      "to": "server:140.82.121.4",
+      "status": "ok",
+      "explainKey": "http.request",
+      "kind": "http.request",
+      "data": {
+        "method": {
+          "value": "GET",
+          "evidence": "observed",
+          "source": "request line we sent"
+        },
+        "target": {
+          "value": "/",
+          "evidence": "observed",
+          "source": "request line we sent"
+        },
+        "version": {
+          "value": "HTTP/1.1",
+          "evidence": "observed",
+          "source": "request line we sent"
+        },
+        "headers": {
+          "value": [
+            {
+              "name": "Host",
+              "value": "github.com"
+            },
+            {
+              "name": "User-Agent",
+              "value": "packet/0.1.0"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "evidence": "observed",
+          "source": "request headers we sent"
+        },
+        "rawHead": {
+          "value": "GET / HTTP/1.1\r\nHost: github.com\r\nUser-Agent: packet/0.1.0\r\nAccept: */*\r\n\r\n",
+          "evidence": "observed",
+          "source": "bytes we wrote"
+        },
+        "headBytes": {
+          "value": 75,
+          "evidence": "observed",
+          "source": "bytes we wrote"
+        },
+        "tlsRecords": {
+          "value": [
+            {
+              "atMs": 2087.2041249999997,
+              "direction": "sent",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 92,
+              "messages": [],
+              "encrypted": true
+            }
+          ],
+          "evidence": "observed",
+          "source": "5-byte TLS record headers during this phase",
+          "note": "Every record during this phase, both directions, not only the sent HTTP bytes. TLS 1.3 session tickets also arrive here, and on the wire they're indistinguishable from response data."
+        }
+      }
+    },
+    {
+      "id": "e16",
+      "hopIndex": 1,
+      "connectionId": "c2",
+      "protocol": "http/1.1",
+      "evidence": "observed",
+      "time": {
+        "start": 2087.309667,
+        "end": 2325.304542
+      },
+      "from": "app",
+      "to": "server:140.82.121.4",
+      "status": "ok",
+      "explainKey": "http.response",
+      "kind": "http.response",
+      "data": {
+        "ttfbMs": {
+          "value": 237.6688750000003,
+          "evidence": "observed",
+          "source": "request written → first response byte read",
+          "note": "Includes the trip to the server, its processing time, and the trip back."
+        },
+        "serverTimeEstimateMs": {
+          "value": 7.50870800000007,
+          "evidence": "derived",
+          "source": "derive: TTFB − TCP handshake RTT",
+          "note": "Rough. Assumes the network round trip hasn't changed since the handshake."
+        },
+        "version": {
+          "value": "HTTP/1.1",
+          "evidence": "observed",
+          "source": "response head we received"
+        },
+        "status": {
+          "value": 200,
+          "evidence": "observed",
+          "source": "response head we received"
+        },
+        "reason": {
+          "value": "OK",
+          "evidence": "observed",
+          "source": "response head we received"
+        },
+        "headers": {
+          "value": [
+            {
+              "name": "Date",
+              "value": "Fri, 02 Oct 2026 08:44:09 GMT"
+            },
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "content-language",
+              "value": "en-US"
+            },
+            {
+              "name": "Vary",
+              "value": "X-PJAX, X-PJAX-Container, Turbo-Visit, Turbo-Frame, X-Requested-With, X-GitHub-Client-Version, Accept-Language, Sec-Fetch-Site,Accept-Encoding, Accept, X-Requested-With"
+            },
+            {
+              "name": "ETag",
+              "value": "W/\"ee6760cad04b7c6acf134a09bd29164a\""
+            },
+            {
+              "name": "Cache-Control",
+              "value": "max-age=0, private, must-revalidate"
+            },
+            {
+              "name": "Strict-Transport-Security",
+              "value": "max-age=31536000; includeSubdomains; preload"
+            },
+            {
+              "name": "X-Frame-Options",
+              "value": "deny"
+            },
+            {
+              "name": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "name": "X-XSS-Protection",
+              "value": "0"
+            },
+            {
+              "name": "Referrer-Policy",
+              "value": "origin-when-cross-origin, strict-origin-when-cross-origin"
+            },
+            {
+              "name": "Content-Security-Policy",
+              "value": "default-src 'none'; base-uri 'self'; child-src github.githubassets.com github.com/assets-cdn/worker/ github.com/assets/ gist.github.com/assets-cdn/worker/; connect-src 'self' uploads.github.com www.githubstatus.com collector.github.com raw.githubusercontent.com api.github.com github-cloud.s3.amazonaws.com github-production-repository-file-5c1aeb.s3.amazonaws.com github-production-upload-manifest-file-7fdce7.s3.amazonaws.com github-production-user-asset-6210df.s3.amazonaws.com *.rel.tunnels.api.visualstudio.com wss://*.rel.tunnels.api.visualstudio.com github.githubassets.com objects-origin.githubusercontent.com copilot-proxy.githubusercontent.com proxy.individual.githubcopilot.com proxy.business.githubcopilot.com proxy.enterprise.githubcopilot.com *.actions.githubusercontent.com wss://*.actions.githubusercontent.com productionresultssa0.blob.core.windows.net productionresultssa1.blob.core.windows.net productionresultssa2.blob.core.windows.net productionresultssa3.blob.core.windows.net productionresultssa4.blob.core.windows.net productionresultssa5.blob.core.windows.net productionresultssa6.blob.core.windows.net productionresultssa7.blob.core.windows.net productionresultssa8.blob.core.windows.net productionresultssa9.blob.core.windows.net productionresultssa10.blob.core.windows.net productionresultssa11.blob.core.windows.net productionresultssa12.blob.core.windows.net productionresultssa13.blob.core.windows.net productionresultssa14.blob.core.windows.net productionresultssa15.blob.core.windows.net productionresultssa16.blob.core.windows.net productionresultssa17.blob.core.windows.net productionresultssa18.blob.core.windows.net productionresultssa19.blob.core.windows.net github-production-repository-image-32fea6.s3.amazonaws.com github-production-release-asset-2e65be.s3.amazonaws.com insights.github.com wss://alive.github.com wss://alive-staging.github.com api.githubcopilot.com api.individual.githubcopilot.com api.business.githubcopilot.com api.enterprise.githubcopilot.com wss://production-copilot-host.webpubsub.azure.com api.github.com/cmc_internal/api/ edge.fullstory.com rs.fullstory.com; font-src github.githubassets.com; form-action 'self' github.com gist.github.com copilot-workspace.githubnext.com objects-origin.githubusercontent.com; frame-ancestors 'none'; frame-src viewscreen.githubusercontent.com notebooks.githubusercontent.com www.youtube-nocookie.com; img-src 'self' data: blob: github.githubassets.com media.githubusercontent.com camo.githubusercontent.com identicons.github.com avatars.githubusercontent.com private-avatars.githubusercontent.com github-cloud.s3.amazonaws.com objects.githubusercontent.com release-assets.githubusercontent.com secured-user-images.githubusercontent.com user-images.githubusercontent.com private-user-images.githubusercontent.com opengraph.githubassets.com repository-images.githubusercontent.com marketplace-screenshots.githubusercontent.com copilotprodattachments.blob.core.windows.net/github-production-copilot-attachments/ github-production-user-asset-6210df.s3.amazonaws.com customer-stories-feed.github.com spotlights-feed.github.com explore-feed.github.com *.googleusercontent.com objects-origin.githubusercontent.com *.githubusercontent.com images.ctfassets.net/8aevphvgewt8/; manifest-src 'self'; media-src github.com user-images.githubusercontent.com secured-user-images.githubusercontent.com private-user-images.githubusercontent.com github-production-user-asset-6210df.s3.amazonaws.com gist.github.com github.githubassets.com assets.ctfassets.net/8aevphvgewt8/ videos.ctfassets.net/8aevphvgewt8/; script-src github.githubassets.com 'sha256-tSjmyPUky1KbRZ0fw9VUil3wFEbeM82rtbJDygGJAXw='; style-src 'unsafe-inline' github.githubassets.com; upgrade-insecure-requests; worker-src github.githubassets.com github.com/assets-cdn/worker/ github.com/assets/ gist.github.com/assets-cdn/worker/"
+            },
+            {
+              "name": "Server",
+              "value": "github.com"
+            },
+            {
+              "name": "Accept-Ranges",
+              "value": "bytes"
+            },
+            {
+              "name": "Set-Cookie",
+              "value": "_gh_sess=p0ZSP1RSNuhYOoGCwRuQ7mofXQ0xcqyRNZFM5PfP6s5eNM2QxI523c6d5BOpY4nMJqPiQ91fwJN6387W03AFSYZPZ12jEhBpH%2F6Z9a6f1BnVa2LkBg1owKjkcjy2cC5DSVahro66YlsaCa6IG%2BfuBUgIwn62pvnMth2vQmPlpL8y%2B0OMO%2FH3%2Fw95NH92tBinBzpTF4UhaPXtO%2B2OP7m9ItCxNJoGlrLkUkr8bYvKSZej3%2BEKCLQc9KgtSwVwjMTaotGeOB3vVmYD5oXgKxZleA%3D%3D--YqrJHyz6RHkn6RZv--Ahs5QeEP8Sa8jOGB1B3Xqw%3D%3D; path=/; HttpOnly; secure; SameSite=Lax"
+            },
+            {
+              "name": "Set-Cookie",
+              "value": "_octo=GH1.1.268618779.1790930658; expires=Sat, 02 Oct 2027 08:44:18 GMT; domain=.github.com; path=/; secure; SameSite=Lax"
+            },
+            {
+              "name": "Set-Cookie",
+              "value": "logged_in=no; expires=Sat, 02 Oct 2027 08:44:18 GMT; domain=.github.com; path=/; HttpOnly; secure; SameSite=Lax"
+            },
+            {
+              "name": "X-GitHub-Request-Id",
+              "value": "4E8B:1C1ACB:40149:39A07:6ABF6EE2"
+            },
+            {
+              "name": "x-github-edge-region",
+              "value": "fra"
+            },
+            {
+              "name": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "evidence": "observed",
+          "source": "response head we received"
+        },
+        "headBytes": {
+          "value": 5344,
+          "evidence": "observed",
+          "source": "response head we received"
+        },
+        "tlsRecords": {
+          "value": [
+            {
+              "atMs": 2305.488792,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 74,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 2305.488792,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 74,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 2324.779584,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 5361,
+              "messages": [],
+              "encrypted": true
+            }
+          ],
+          "evidence": "observed",
+          "source": "5-byte TLS record headers during this phase",
+          "note": "Every record during this phase, both directions, not only the received HTTP bytes. TLS 1.3 session tickets also arrive here, and on the wire they're indistinguishable from response data."
+        }
+      }
+    },
+    {
+      "id": "e17",
+      "hopIndex": 1,
+      "connectionId": "c2",
+      "protocol": "http/1.1",
+      "evidence": "observed",
+      "time": {
+        "start": 2325.304542,
+        "end": 7092.649042
+      },
+      "from": "app",
+      "to": "server:140.82.121.4",
+      "status": "ok",
+      "explainKey": "http.framing.chunked",
+      "kind": "http.body",
+      "data": {
+        "framing": {
+          "value": "chunked",
+          "evidence": "derived",
+          "source": "derive: RFC 9112 §6.3 message body length rules, applied to the response head"
+        },
+        "bodyBytes": {
+          "value": 576080,
+          "evidence": "observed",
+          "source": "body bytes read, framing removed"
+        },
+        "wireBytes": {
+          "value": 576197,
+          "evidence": "observed",
+          "source": "bytes read after the head"
+        },
+        "chunks": {
+          "value": 14,
+          "evidence": "observed",
+          "source": "chunk-size lines read"
+        },
+        "truncated": {
+          "value": false,
+          "evidence": "observed",
+          "source": "engine body cap / early end",
+          "note": "Packet reads at most 2 MB of body."
+        },
+        "tlsRecords": {
+          "value": [
+            {
+              "atMs": 2636.399,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 2636.9640419999996,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 2882.531625,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 2882.72875,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 2882.72875,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 24,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 2882.72875,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 23,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 2883.0414170000004,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 3690.901625,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 3690.901625,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 25,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 3691.175709,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 3691.3161250000003,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 3691.3161250000003,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 25,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 3691.4387500000003,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 3691.636125,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 3691.636125,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 25,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 3691.7928340000003,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 3691.9004170000003,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 3691.993167,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 3932.6566669999997,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 3932.6566669999997,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 3042,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 5125.559292,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 5164.45225,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 13393,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 5170.659,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 5382.85875,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 5382.85875,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 25,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 5383.094542,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 5383.220542,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 5401.006209,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 5646.067333999999,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 5653.197999999999,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 3042,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 5653.399584,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 5658.314458999999,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 13393,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 5665.233,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 6011.65775,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 6011.8456670000005,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 6011.8456670000005,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 6095,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 6011.985959000001,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 13363,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 6012.391334,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 6856.554459,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 6868.50025,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 6874.899959,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 6874.899959,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 26,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 6875.118875,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 6885.833084,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16401,
+              "messages": [],
+              "encrypted": true
+            },
+            {
+              "atMs": 7092.584042,
+              "direction": "received",
+              "contentType": "application_data",
+              "recordVersion": "0x0303 (TLS 1.2)",
+              "length": 16030,
+              "messages": [],
+              "encrypted": true
+            }
+          ],
+          "evidence": "observed",
+          "source": "5-byte TLS record headers during this phase",
+          "note": "Every record during this phase, both directions, not only the received HTTP bytes. TLS 1.3 session tickets also arrive here, and on the wire they're indistinguishable from response data."
+        }
+      }
+    },
+    {
+      "id": "e18",
+      "hopIndex": 1,
+      "connectionId": "c2",
+      "protocol": "tcp",
+      "evidence": "observed",
+      "time": {
+        "start": 7092.76725,
+        "end": 7319.718667
+      },
+      "from": "app",
+      "to": "server:140.82.121.4",
+      "status": "ok",
+      "explainKey": "tcp.close",
+      "kind": "tcp.close",
+      "data": {
+        "initiatedBy": {
+          "value": "client",
+          "evidence": "observed",
+          "source": "we called shutdown(2) first"
+        },
+        "peerClosed": {
+          "value": true,
+          "evidence": "observed",
+          "source": "read(2) returned 0 (end of stream)"
+        },
+        "kernel": {
+          "value": {
+            "state": "TIME_WAIT",
+            "srttMs": 228,
+            "rttvarMs": 39,
+            "rttLatestMs": 227,
+            "rtoMs": 0,
+            "mss": 1388,
+            "cwndBytes": 14318,
+            "ssthreshBytes": 1073725440,
+            "sendWindowBytes": 67584,
+            "recvWindowBytes": 265728,
+            "sendWindowScale": 10,
+            "recvWindowScale": 6,
+            "options": {
+              "timestamps": true,
+              "sack": true,
+              "windowScaling": true,
+              "ecn": true
+            },
+            "packetsSent": 4,
+            "packetsReceived": 73,
+            "bytesSent": 437,
+            "bytesReceived": 585837,
+            "retransmittedPackets": 0,
+            "retransmittedBytes": 0,
+            "outOfOrderBytes": 126308
+          },
+          "evidence": "observed",
+          "source": "getsockopt(IPPROTO_TCP, TCP_CONNECTION_INFO)",
+          "note": "After both FINs. The side that closed first waits in TIME_WAIT."
+        }
+      }
+    },
+    {
+      "id": "e19",
+      "hopIndex": 0,
+      "protocol": "dns",
+      "evidence": "observed",
+      "time": {
+        "start": 7322.273125,
+        "end": 7329.442625000001
+      },
+      "from": "app",
+      "to": "dns:172.20.10.1",
+      "status": "ok",
+      "explainKey": "dns.query",
+      "kind": "dns.query",
+      "data": {
+        "recordType": {
+          "value": "A",
+          "evidence": "observed",
+          "source": "question section we sent"
+        },
+        "qname": {
+          "value": "github.com.",
+          "evidence": "observed",
+          "source": "question section we sent"
+        },
+        "server": {
+          "value": {
+            "address": "172.20.10.1",
+            "port": 53
+          },
+          "evidence": "observed",
+          "source": "/etc/resolv.conf: first nameserver"
+        },
+        "local": {
+          "value": {
+            "address": "172.20.10.3",
+            "port": 55564
+          },
+          "evidence": "observed",
+          "source": "getsockname(2) on our UDP socket"
+        },
+        "messageId": {
+          "value": 26093,
+          "evidence": "observed",
+          "source": "header we sent"
+        },
+        "queryBytes": {
+          "value": 28,
+          "evidence": "observed",
+          "source": "UDP payload we sent",
+          "note": "DNS message only. UDP adds 8 header bytes, IP adds 20 (v4) or 40 (v6)."
+        },
+        "response": {
+          "bytes": {
+            "value": 44,
+            "evidence": "observed",
+            "source": "UDP payload received"
+          },
+          "rcode": {
+            "value": "NoError",
+            "evidence": "observed",
+            "source": "dns response header: RCODE"
+          },
+          "flags": {
+            "value": {
+              "authoritative": false,
+              "truncated": false,
+              "recursionDesired": true,
+              "recursionAvailable": true
+            },
+            "evidence": "observed",
+            "source": "dns response header: AA/TC/RD/RA bits"
+          },
+          "answers": {
+            "value": [
+              {
+                "name": "github.com.",
+                "recordType": "A",
+                "ttl": 70,
+                "value": "140.82.121.4"
+              }
+            ],
+            "evidence": "observed",
+            "source": "dns response: answer section"
+          }
+        }
+      }
+    },
+    {
+      "id": "e20",
+      "hopIndex": 0,
+      "protocol": "dns",
+      "evidence": "observed",
+      "time": {
+        "start": 7322.7595,
+        "end": 7531.498375
+      },
+      "from": "app",
+      "to": "dns:172.20.10.1",
+      "status": "ok",
+      "explainKey": "dns.query",
+      "kind": "dns.query",
+      "data": {
+        "recordType": {
+          "value": "AAAA",
+          "evidence": "observed",
+          "source": "question section we sent"
+        },
+        "qname": {
+          "value": "github.com.",
+          "evidence": "observed",
+          "source": "question section we sent"
+        },
+        "server": {
+          "value": {
+            "address": "172.20.10.1",
+            "port": 53
+          },
+          "evidence": "observed",
+          "source": "/etc/resolv.conf: first nameserver"
+        },
+        "local": {
+          "value": {
+            "address": "172.20.10.3",
+            "port": 56460
+          },
+          "evidence": "observed",
+          "source": "getsockname(2) on our UDP socket"
+        },
+        "messageId": {
+          "value": 13187,
+          "evidence": "observed",
+          "source": "header we sent"
+        },
+        "queryBytes": {
+          "value": 28,
+          "evidence": "observed",
+          "source": "UDP payload we sent",
+          "note": "DNS message only. UDP adds 8 header bytes, IP adds 20 (v4) or 40 (v6)."
+        },
+        "response": {
+          "bytes": {
+            "value": 112,
+            "evidence": "observed",
+            "source": "UDP payload received"
+          },
+          "rcode": {
+            "value": "NoError",
+            "evidence": "observed",
+            "source": "dns response header: RCODE"
+          },
+          "flags": {
+            "value": {
+              "authoritative": false,
+              "truncated": false,
+              "recursionDesired": true,
+              "recursionAvailable": true
+            },
+            "evidence": "observed",
+            "source": "dns response header: AA/TC/RD/RA bits"
+          },
+          "answers": {
+            "value": [],
+            "evidence": "observed",
+            "source": "dns response: answer section"
+          }
+        }
+      }
+    }
+  ],
+  "outcome": {
+    "ok": true,
+    "summary": "HTTP 200 after 1 redirect(s)"
+  }
+}
